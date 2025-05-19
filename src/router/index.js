@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import ChatsView from '../views/ChatsView.vue'
 import AboutView from '../views/AboutView.vue'
 import LoginView from '../views/LoginView.vue'
+import SessionsView from '../views/SessionsView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -15,6 +16,11 @@ const router = createRouter({
       path: '/login',
       name: 'login',
       component: LoginView,
+    },
+    {
+      path: '/sessions',
+      name: 'sessions',
+      component: SessionsView,
     },
     {
       path: '/about',

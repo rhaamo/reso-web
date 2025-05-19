@@ -556,6 +556,13 @@
     unimport "^5.0.1"
     untyped "^2.0.0"
 
+"@photo-sphere-viewer/core@^5.13.2":
+  version "5.13.2"
+  resolved "https://registry.yarnpkg.com/@photo-sphere-viewer/core/-/core-5.13.2.tgz#518f27a2b7ca5a80068d8922183a9999a1b33ad1"
+  integrity sha512-rL4Ey39Prx4Iyxt1f2tAqlXvqu4/ovXfUvIpLt540OpZJiFjWccs6qLywof9vuhBJ7PXHudHWCjRPce0W8kx8w==
+  dependencies:
+    three "^0.175.0"
+
 "@pkgr/core@^0.2.4":
   version "0.2.4"
   resolved "https://registry.yarnpkg.com/@pkgr/core/-/core-0.2.4.tgz#d897170a2b0ba51f78a099edccd968f7b103387c"
@@ -2395,6 +2402,11 @@ synckit@^0.11.0:
   integrity sha512-2pR2ubZSV64f/vqm9eLPz/KOvR9Dm+Co/5ChLgeHl0yEDRc6h5hXHoxEQH8Y5Ljycozd3p1k5TTSVdzYGkPvLw==
   dependencies:
     "@pkgr/core" "^0.2.4"
+
+three@^0.175.0:
+  version "0.175.0"
+  resolved "https://registry.yarnpkg.com/three/-/three-0.175.0.tgz#67b357b0b1ee8ef0445b9a768f59363ab1fa7921"
+  integrity sha512-nNE3pnTHxXN/Phw768u0Grr7W4+rumGg/H6PgeseNJojkJtmeHJfZWi41Gp2mpXl1pg1pf1zjwR4McM1jTqkpg==
 
 tinyexec@^0.3.2:
   version "0.3.2"

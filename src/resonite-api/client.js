@@ -24,11 +24,16 @@ location ^~ /happy/ {
   proxy_pass https://api.resonite.com/;
 }
 */
-const API = "https://reso-web.lan.otter.sh/happy"
+const API_BASE = "https://reso-web.lan.otter.sh"
+// we also have to replace this one because thanks no CORS :|
+const SKYFROST_DOMAIN = "reso-web.lan.otter.sh"
+const API = `${API_BASE}/happy`
 
 const MACHINEID = GenerateRandomMachineId();
 const UID = await GenerateUID();
 const KEY = "oi+ISZuYtMYtpruYHLQLPkXgPaD+IcaRNXPI7b3Z0iYe5+AcccouLYFI9vloMmYEYDlE1PhDL52GsddfxgQeK4Z_hem84t1OXGUdScFkLSMhJA2te86LBL_rFL4JjO4F_hHHIJH1Gm1IYVuvBQjpb89AJ0D6eamd7u4MxeWeEVE="
+
+const COMPAT = "VSjZ/wzHcTkTha7/1/JUjQ=="
 
 function getRandomBytes(n) {
   var crypto = (self.crypto || self.msCrypto), QUOTA = 65536;
@@ -129,8 +134,28 @@ const getAssetsDomainUrl = (resdb) => {
   return `https://assets.resonite.com/${hash}`
 }
 
+const getSessions = (userId, token, filterSettings) => {
+  // Filtering: name, includeEnded, includeIncompatible, hostName, minActiveUsers, includeEmptyHeadless
+  return Axios.get(`${API}/sessions`, {
+    headers: {
+      'Authorization': `res ${userId}:${token}`
+    },
+    params: filterSettings
+  })
+}
+
+const getSession = (userId, token, sessionId) => {
+  return Axios.get(`${API}/sessions/${sessionId}`, {
+    headers: {
+      'Authorization': `res ${userId}:${token}`
+    }
+  })
+}
+
 const resoniteApiClient = {
   API,
+  API_BASE,
+  SKYFROST_DOMAIN,
   MACHINEID,
   UID,
   KEY,
@@ -139,7 +164,9 @@ const resoniteApiClient = {
   fetchContact,
   fetchUser,
   getUserMessages,
-  getAssetsDomainUrl
+  getAssetsDomainUrl,
+  getSessions,
+  getSession
 }
 
 export default resoniteApiClient

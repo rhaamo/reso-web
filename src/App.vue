@@ -5,6 +5,7 @@
     <BCollapse id="nav-collapse" is-nav>
       <BNavbarNav>
         <BNavItem :to="{ name: 'chats' }">Chat</BNavItem>
+        <BNavItem :to="{ name: 'sessions' }">Sessions</BNavItem>
         <BNavItem :to="{ name: 'about' }">About</BNavItem>
       </BNavbarNav>
       <!-- Right aligned nav items -->

@@ -191,7 +191,7 @@ export default {
             appVersion: '0.0.0 beta of reso-web',
             outputDevice: 'Unknown',
             isMobile: false,
-            compatibilityHash: 'OttpossumResoWeb-0.0.0',
+            compatibilityHash: resoniteApiClient.COMPAT,
             sessionType: 'ChatClient', // Chat Client
           },
           {

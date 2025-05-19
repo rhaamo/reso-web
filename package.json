@@ -13,6 +13,7 @@
   "dependencies": {
     "@dreamonkey/vue-signalr": "^1.2.0",
     "@microsoft/signalr": "^8.0.7",
+    "@photo-sphere-viewer/core": "^5.13.2",
     "@vuelidate/core": "^2.0.3",
     "@vuelidate/validators": "^2.0.4",
     "axios": "^1.9.0",
