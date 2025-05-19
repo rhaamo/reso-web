@@ -1,15 +1,9 @@
 <template>
-  <div class="about">
-    <h1>This is an about page</h1>
-  </div>
+  <BContainer class="p-5">
+    <center>
+      <h3>ResoWeb</h3>
+      A web app blah blah.<br />
+      Source code <a href="https://git.otter.sh/dashie/Reso-Web" target="_blank">here</a>.
+    </center>
+  </BContainer>
 </template>
-
-<style>
-@media (min-width: 1024px) {
-  .about {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-  }
-}
-</style>

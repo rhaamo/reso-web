@@ -1,85 +1,47 @@
-<script setup>
-import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
-</script>
-
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav>
-    </div>
-  </header>
+  <BNavbar v-b-color-mode="'dark'" toggleable="lg" variant="secondary">
+    <BNavbarBrand :to="{ name: 'chats' }">ResoWeb</BNavbarBrand>
+    <BNavbarToggle target="nav-collapse" />
+    <BCollapse id="nav-collapse" is-nav>
+      <BNavbarNav>
+        <BNavItem :to="{ name: 'chats' }">Chat</BNavItem>
+        <BNavItem :to="{ name: 'about' }">About</BNavItem>
+      </BNavbarNav>
+      <!-- Right aligned nav items -->
+      <BNavbarNav class="ms-auto mb-2 mb-lg-0">
+        <BNavItemDropdown>
+          <!-- Using 'button-content' slot -->
+          <template #button-content>
+            <em>User</em>
+          </template>
+          <BDropdownItem href="#">Profile</BDropdownItem>
+          <BDropdownItem href="#">Sign Out</BDropdownItem>
+        </BNavItemDropdown>
+      </BNavbarNav>
+    </BCollapse>
+  </BNavbar>
 
   <RouterView />
 </template>
 
-<style scoped>
-header {
-  line-height: 1.5;
-  max-height: 100vh;
+<script>
+import logger from '@/logging'
+import { useUserStore } from '@/stores/user'
+
+export default {
+  setup: () => ({
+    userStore: useUserStore(),
+  }),
+  created() {
+    logger.default.info('App init...')
+
+    // Check if we are logged in, if not, redirect to login page
+    if (!this.userStore.isLoggedIn) {
+      logger.default.info('Not logged in, redirecting to login')
+      this.$router.push({
+        name: 'login',
+      })
+    }
+  },
 }
-
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-nav {
-  width: 100%;
-  font-size: 12px;
-  text-align: center;
-  margin-top: 2rem;
-}
-
-nav a.router-link-exact-active {
-  color: var(--color-text);
-}
-
-nav a.router-link-exact-active:hover {
-  background-color: transparent;
-}
-
-nav a {
-  display: inline-block;
-  padding: 0 1rem;
-  border-left: 1px solid var(--color-border);
-}
-
-nav a:first-of-type {
-  border: 0;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-
-  nav {
-    text-align: left;
-    margin-left: -1rem;
-    font-size: 1rem;
-
-    padding: 1rem 0;
-    margin-top: 1rem;
-  }
-}
-</style>
+</script>
