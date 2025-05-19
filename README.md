@@ -2,6 +2,14 @@
 
 This should be an app to chat and manage inventory and whatnot but for now only parts of chat is implemented.
 
+## Features
+
+- Can list users (no status)
+- Can fetch an user messages history
+- List sessions with 3D sphere viewer and details (sessions list is filtered hard for now for only minUsers=1)
+
+## It's broken :(
+
 Anything using SignalR doesn't work, Sessions Updates are received, but nothing sent seems to be accepted, so no statues at all, sending messages, status refresh etc...
 
 ```js
