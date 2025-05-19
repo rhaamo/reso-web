@@ -26,3 +26,9 @@ Anything using SignalR doesn't work, Sessions Updates are received, but nothing 
 // ReCon send:
 // {type: 1, invocationId: 38c6f633-ef56-45cc-884c-63577d161b08, target: InitializeStatus, arguments: []}
 ```
+
+## Special mention
+
+To Resonite for not having any CORS to permits us to make apps from the browser :| https://github.com/Yellow-Dog-Man/Resonite-Issues/issues/3537
+
+So the whole APIs are usable only through a custom nginx vhost proxy_pass to bypass CORS issues... see the file `src/resonite-api/client.js` for more details.

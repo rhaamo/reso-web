@@ -23,6 +23,11 @@ location ^~ /happy/ {
 
   proxy_pass https://api.resonite.com/;
 }
+
+The skyfrost is done the same way, but it's another domain and /thumbnails/ basically...
+We shouldn't need that, BUT, the photo viewer for the spherical preview does an XHR, which ... needs CORS
+
+bruh
 */
 const API_BASE = "https://reso-web.lan.otter.sh"
 // we also have to replace this one because thanks no CORS :|
