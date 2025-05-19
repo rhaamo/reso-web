@@ -19,6 +19,23 @@ import { v4 as uuidv4 } from 'uuid'
 // ReCon send:
 // {type: 1, invocationId: 38c6f633-ef56-45cc-884c-63577d161b08, target: InitializeStatus, arguments: []}
 
+// send message from ReCon
+// {type: 1,
+// invocationId: 818ee13c-41d0-48d9-9c8d-4997a6899eb2,
+// target: SendMessage,
+// arguments:
+// [
+// {
+// id: MSG-cd12647e-1b32-48bd-93e7-f6a8abbaeac4,
+// recipientId: U-1QStUlUj0gy,
+// senderId: U-1QStUlUj0gy,
+// ownerId: U-1QStUlUj0gy,
+// messageType: Text,
+// content: woof, sendTime: 2025-05-19T20:21:45.968555Z}]}
+// well the hub returns
+// {type: 3, invocationId: 818ee13c-41d0-48d9-9c8d-4997a6899eb2, result: null}
+// anyway...
+
 export const useHubStore = defineStore('hub', {
   persist: false,
   state: () => ({
@@ -35,8 +52,9 @@ export const useHubStore = defineStore('hub', {
           .withUrl(`${resoniteApiClient.API}/hub`, {
             headers: {
               "Authorization": userStore.fullToken,
-              "UID": resoniteApiClient.MACHINEID,
-              "SecretClientAccessKey": resoniteApiClient.KEY
+              // Are thoses two really required ? ReCon doesn't seems to have them
+              // "UID": resoniteApiClient.MACHINEID,
+              // "SecretClientAccessKey": resoniteApiClient.KEY
             }
           })
           .withAutomaticReconnect()
@@ -134,8 +152,8 @@ export const useHubStore = defineStore('hub', {
         recipientId: toUserId,
         messageType: "Text",
         sendTime: new Date().toISOString(),
-        lastUpdateTime: new Date().toISOString(),
-        content: message
+        // lastUpdateTime: new Date().toISOString(),
+        content: message,
       }
 
       logger.default.info("Sending TextMessage:", msg)
