@@ -142,69 +142,75 @@ export default {
     this.fetchUsers()
   },
   mounted() {
-    this.hubStore.initHubConnection().then(async () => {
-      this.hubStore.connection.on('ReceiveStatusUpdate', (items) => {
-        logger.default.info('ReceiveStatusUpdate:', items)
+    this.$nextTick(() => {
+      this.hubStore.initHubConnection().then(async () => {
+        this.hubStore.connection.on('ReceiveStatusUpdate', (items) => {
+          logger.default.info('ReceiveStatusUpdate:', items)
+        })
+        // IDK, initial own status ?
+        await this.hubStore.hubInitializeStatus()
+
+        // Ask for a status update for all contacts ?
+        // TODO Migrate that to a function located in hubStore
+        await this.hubStore.connection
+          .invoke('RequestStatus', null, false)
+          .catch(async (error) => {
+            logger.default.error(error)
+          })
+          .then((res) => {
+            logger.default.info(res)
+          })
+
+        // Ask for a status update for a specific contact ?
+        // TODO Migrate that to a function located in hubStore
+        this.contacts.forEach(async (contact) => {
+          await this.hubStore.connection
+            .invoke('RequestStatus', contact.id, false)
+            .catch(async (error) => {
+              logger.default.debug(`Asking refresh for ${contact.id}`)
+              logger.default.error(error)
+            })
+            .then((res) => {
+              logger.default.debug(`Asking refresh for ${contact.id}`)
+              logger.default.info(res)
+            })
+        })
+
+        // Send my own status update
+        let curDate = new Date()
+        let ourStatus = [
+          {
+            userId: this.userStore.userId, // ourself
+            onlineStatus: 'Online', // Online
+            lastStatusChange: curDate.toISOString(),
+            isPresent: true,
+            lastPresenceTimestamp: curDate.toISOString(),
+            userSessionId: uuidv4(),
+            currentSessionIndex: -1,
+            sessions: [],
+            appVersion: '0.0.0 beta of reso-web',
+            outputDevice: 'Unknown',
+            isMobile: false,
+            compatibilityHash: 'OttpossumResoWeb-0.0.0',
+            sessionType: 'ChatClient', // Chat Client
+          },
+          {
+            group: 1, // idk
+            targetIds: null, // either
+          },
+        ]
+        // TODO Timer to resend periodically
+        // TODO Migrate that to a function located in hubStore
+        await this.hubStore.connection
+          .invoke('BroadcastStatus', ...ourStatus)
+          .catch(async (error) => {
+            logger.default.error(error)
+          })
+          .then(async (res) => {
+            logger.default.info(res)
+          })
+        logger.default.info(ourStatus)
       })
-      // IDK, initial own status ?
-      await this.hubStore.hubInitializeStatus()
-
-      // Ask for a status update for all contacts ?
-      // TODO Migrate that to a function located in hubStore
-      await this.hubStore.connection
-        .invoke('RequestStatus', null, false)
-        .catch(async (error) => {
-          logger.default.error(error)
-        })
-        .then((res) => {
-          logger.default.info(res)
-        })
-
-      // Ask for a status update for a specific contact ?
-      // TODO Migrate that to a function located in hubStore
-      await this.hubStore.connection
-        .invoke('RequestStatus', 'U-Resonite', false)
-        .catch(async (error) => {
-          logger.default.error(error)
-        })
-        .then((res) => {
-          logger.default.info(res)
-        })
-
-      // Send my own status update
-      let curDate = new Date()
-      let ourStatus = [
-        {
-          userId: this.userStore.userId, // ourself
-          onlineStatus: 'Online', // Online
-          lastStatusChange: curDate.toISOString(),
-          isPresent: true,
-          lastPresenceTimestamp: curDate.toISOString(),
-          userSessionId: uuidv4(),
-          currentSessionIndex: -1,
-          sessions: [],
-          appVersion: '0.0.0 beta of reso-web',
-          outputDevice: 'Unknown',
-          isMobile: false,
-          compatibilityHash: 'OttpossumResoWeb-0.0.0',
-          sessionType: 'ChatClient', // Chat Client
-        },
-        {
-          group: 1, // idk
-          targetIds: null, // either
-        },
-      ]
-      // TODO Timer to resend periodically
-      // TODO Migrate that to a function located in hubStore
-      await this.hubStore.connection
-        .invoke('BroadcastStatus', ...ourStatus)
-        .catch(async (error) => {
-          logger.default.error(error)
-        })
-        .then(async (res) => {
-          logger.default.info(res)
-        })
-      logger.default.info(ourStatus)
     })
   },
   methods: {
