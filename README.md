@@ -2,7 +2,7 @@
 
 This should be an app to chat and manage inventory and whatnot but for now only parts of chat is implemented.
 
-Anything using SignalR doesn't work, stuff are received, but nothing sent seems to be accepted, so no statues at all, sending messages, status refresh etc...
+Anything using SignalR doesn't work, Sessions Updates are received, but nothing sent seems to be accepted, so no statues at all, sending messages, status refresh etc...
 
 ```js
 // All .send or .invoke on the SignalR thingy ends up with:
