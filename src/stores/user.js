@@ -51,6 +51,16 @@ export const useUserStore = defineStore('user', {
           logger.default.error("Login error", error.message)
           this.reset()
         })
+    },
+    async logout() {
+      await resoniteApiClient.logout(this.userId, this.token).then((result) => {
+        logger.default.info("Logged out", result)
+        this.reset()
+      })
+      .catch((error) => {
+        logger.default.error("Error logging out", error)
+        this.reset()
+      })
     }
   }
 });

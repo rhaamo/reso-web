@@ -16,7 +16,7 @@
             <em>User</em>
           </template>
           <BDropdownItem href="#">Profile</BDropdownItem>
-          <BDropdownItem href="#">Sign Out</BDropdownItem>
+          <BDropdownItem :to="{ name: 'logout' }">Sign Out</BDropdownItem>
         </BNavItemDropdown>
       </BNavbarNav>
     </BCollapse>

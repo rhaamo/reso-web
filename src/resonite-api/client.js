@@ -30,7 +30,7 @@ const SKYFROST_DOMAIN = "reso-web.lan.otter.sh"
 const API = `${API_BASE}/happy`
 
 const MACHINEID = GenerateRandomMachineId();
-const UID = await GenerateUID();
+const UID = "d46b9c0e683bfb2c9d5356653dbb4a5df39963174bd74eebf72e6cab974d300c" // await GenerateUID();
 const KEY = "oi+ISZuYtMYtpruYHLQLPkXgPaD+IcaRNXPI7b3Z0iYe5+AcccouLYFI9vloMmYEYDlE1PhDL52GsddfxgQeK4Z_hem84t1OXGUdScFkLSMhJA2te86LBL_rFL4JjO4F_hHHIJH1Gm1IYVuvBQjpb89AJ0D6eamd7u4MxeWeEVE="
 
 const COMPAT = "VSjZ/wzHcTkTha7/1/JUjQ=="
@@ -85,6 +85,14 @@ const loginUserPassword = (username, password, totp) => {
 }
 
 // TODO Extend token life https://github.com/Lexevolution/mvcontact-bot/blob/main/index.js#L201
+
+const logout = (userId, token) => {
+  return Axios.delete(`${API}/userSessions/${userId}/${token}`, {
+      headers: {
+      'Authorization': `res ${userId}:${token}`
+      },
+    })
+}
 
 // Return your contact list
 const fetchContacts = (userId, token) => {
@@ -160,6 +168,7 @@ const resoniteApiClient = {
   UID,
   KEY,
   loginUserPassword,
+  logout,
   fetchContacts,
   fetchContact,
   fetchUser,
