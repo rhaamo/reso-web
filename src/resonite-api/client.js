@@ -167,6 +167,7 @@ const resoniteApiClient = {
   MACHINEID,
   UID,
   KEY,
+  COMPAT,
   loginUserPassword,
   logout,
   fetchContacts,
