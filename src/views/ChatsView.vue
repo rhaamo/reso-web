@@ -51,7 +51,7 @@
 
         <BCol v-if="!selectedContact">Please select a contact to chat with.</BCol>
         <BCol v-else>
-          <BCard :title="selectedContact.contactUsername" header-tag="header" footer-tag="footer">
+          <BCard header-tag="header" footer-tag="footer">
             <template #header>
               <h6 class="mb-0">{{ selectedContact.contactUsername }}</h6>
             </template>
@@ -99,7 +99,7 @@
 }
 
 .allMsgs {
-  max-height: 20em;
+  max-height: 30em;
   overflow-y: scroll;
   overflow-x: hidden;
 }
@@ -163,7 +163,7 @@ export default {
       // Ask for a status update for a specific contact ?
       // TODO Migrate that to a function located in hubStore
       await this.hubStore.connection
-        .invoke('RequestStatus', this.userStore.userId, false)
+        .invoke('RequestStatus', 'U-Resonite', false)
         .catch(async (error) => {
           logger.default.error(error)
         })
@@ -238,8 +238,8 @@ export default {
         .then((response) => {
           this.selectedContactMessages = response.data.reverse()
           // TODO FIXME broken lol
-          const messagesContainer = ref()
-          messagesContainer.value.scrollIntoView({ behavior: 'smooth' })
+          // const messagesContainer = ref()
+          // messagesContainer.scrollTop = messagesContainer.scrollHeight
         })
     },
     sendMessage() {
