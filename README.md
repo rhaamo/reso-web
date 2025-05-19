@@ -1,6 +1,6 @@
 # Reso-WEB
 
-This should be an app to chat and manage inventory and whatnot but for now only parts of chat is implemented.
+This should be an app to chat and manage inventory and whatnot but for now only parts of chat is implemented and listing sessions with details.
 
 ## Features
 
