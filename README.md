@@ -1,35 +1,18 @@
-# reso-web
+# Reso-WEB
 
-This template should help get you started developing with Vue 3 in Vite.
+This should be an app to chat and manage inventory and whatnot but for now only parts of chat is implemented.
 
-## Recommended IDE Setup
+Anything using SignalR doesn't work, stuff are received, but nothing sent seems to be accepted...
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+```js
+// All .send or .invoke on the SignalR thingy ends up with:
+// {"type":3,"invocationId":"4","result":null}
+// so idk... but we receive correctly the session updates
+// it's just that anything send to it just seems to silently fail
 
-## Customize configuration
-
-See [Vite Configuration Reference](https://vite.dev/config/).
-
-## Project Setup
-
-```sh
-yarn
-```
-
-### Compile and Hot-Reload for Development
-
-```sh
-yarn dev
-```
-
-### Compile and Minify for Production
-
-```sh
-yarn build
-```
-
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
-yarn lint
+// example:
+// TX: {"arguments":[],"invocationId":"0","target":"InitializeStatus","type":1}
+// RX: {"type":3,"invocationId":"0","result":null}
+// ReCon send:
+// {type: 1, invocationId: 38c6f633-ef56-45cc-884c-63577d161b08, target: InitializeStatus, arguments: []}
 ```
