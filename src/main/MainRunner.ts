@@ -9,7 +9,7 @@ import IPCs from './IPCs'
 import { createTray, hideWindow, showWindow } from './tray'
 
 const options = {
-  width: Constants.IS_DEV_ENV ? 1500 : 1200,
+  width: Constants.IS_DEV_ENV ? 1800 : 1500,
   height: 1000,
   tray: {
     // all optional values from DEFAULT_TRAY_OPTIONS can de defined here
