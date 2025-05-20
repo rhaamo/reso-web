@@ -43,13 +43,18 @@
     <br />
     Access level: {{ sessionDetails.accessLevel }}
     <br />
-    Headless: {{ sessionDetails.headlessHost }}
+    <template v-if="sessionDetails.headlessHost">
+      Headless: {{ sessionDetails.headlessHost }} ({{
+        getUsernameByUserId(sessionDetails.hostUserId)
+      }})
+    </template>
     <br />
     Users [{{ sessionDetails.activeUsers }}/{{ sessionDetails.maxUsers }}]:
     <ul>
       <li v-for="user in sessionDetails.sessionUsers" :key="user.userId">
         {{ user.username }} (<template v-if="!user.isPresent">inactive</template
-        ><template v-else>active</template>)
+        ><template v-else>active</template
+        ><template v-if="user.userID === sessionDetails.hostUserId">, session host</template>)
       </li>
     </ul>
   </BModal>
@@ -163,6 +168,13 @@ export default {
             moveSpeed: 2
           })
         })
+    },
+    getUsernameByUserId(userId) {
+      console.log(this.sessionDetails.sessionUsers)
+      return (
+        this.sessionDetails.sessionUsers.find((el) => el.userID === userId)?.username ||
+        'No user found'
+      )
     }
   }
 }
