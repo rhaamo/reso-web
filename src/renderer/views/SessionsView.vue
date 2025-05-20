@@ -38,19 +38,19 @@
     >
     <template v-else>No description provided.</template>
     <br />
-    <!-- TODO get the username for .ownerId from an API call, and probably cache it a bit -->
-    A world by {{ sessionDetails.correspondingWorldId.ownerId }}, last updated on
-    {{ formatDateYYYMMDD(sessionDetails.lastUpdate) }}.
-    <br />
+    <template v-if="sessionDetails.correspondingWorldId">
+      <!-- TODO get the username for .ownerId from an API call, and probably cache it a bit -->
+      A world by {{ sessionDetails.correspondingWorldId.ownerId }}, last updated on
+      {{ formatDateYYYMMDD(sessionDetails.lastUpdate) }}.
+      <br />
+    </template>
     Tags:
     <BBadge variant="info" v-for="tag in sessionDetails.tags" :key="tag">{{ tag }}</BBadge>
     <br />
     Access level: {{ sessionDetails.accessLevel }}
     <br />
     <template v-if="sessionDetails.headlessHost">
-      Headless: {{ sessionDetails.headlessHost }} ({{
-        getUsernameByUserId(sessionDetails.hostUserId)
-      }})
+      Headless: {{ sessionDetails.headlessHost }} ({{ sessionDetails.hostUsername }})
     </template>
     <br />
     Users [{{ sessionDetails.activeUsers }}/{{ sessionDetails.maxUsers }}]:
