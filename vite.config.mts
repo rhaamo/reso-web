@@ -11,6 +11,7 @@ import { resolve, dirname } from 'path'
 import { builtinModules } from 'module'
 import Components from 'unplugin-vue-components/vite'
 import { BootstrapVueNextResolver } from 'bootstrap-vue-next'
+import vueDevTools from 'vite-plugin-vue-devtools'
 
 const isDevEnv = process.env.NODE_ENV === 'development'
 
@@ -86,6 +87,9 @@ export default defineConfig(({ mode }) => {
         '@': resolve(dirname(fileURLToPath(import.meta.url)), 'src')
       }
     },
+    optimizeDeps: {
+      exclude: ['bootstrap-vue-next']
+    },
     base: './',
     root: resolve('./src/renderer'),
     publicDir: resolve('./src/public'),
@@ -97,6 +101,7 @@ export default defineConfig(({ mode }) => {
     },
     plugins: [
       Vue(),
+      vueDevTools(),
       Components({
         resolvers: [BootstrapVueNextResolver()]
       }),
