@@ -61,7 +61,6 @@
         ><template v-if="user.userID === sessionDetails.hostUserId">, session host</template>)
       </li>
     </ul>
-    {{ sessionDetails }}
   </BModal>
 </template>
 
