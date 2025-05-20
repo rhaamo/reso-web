@@ -153,10 +153,10 @@ export default {
         await this.hubStore.connection
           .invoke('RequestStatus', null, false)
           .catch(async (error) => {
-            logger.default.error(error)
+            logger.default.error('RequestStatus null,false err', error)
           })
           .then((res) => {
-            logger.default.info(res)
+            logger.default.info('RequestStatus null,false success', res)
           })
 
         // Ask for a status update for a specific contact ?
@@ -166,11 +166,11 @@ export default {
             .invoke('RequestStatus', contact.id, false)
             .catch(async (error) => {
               logger.default.debug(`Asking refresh for ${contact.id}`)
-              logger.default.error(error)
+              logger.default.error('RequestStatus userId,false err', error)
             })
             .then((res) => {
               logger.default.debug(`Asking refresh for ${contact.id}`)
-              logger.default.info(res)
+              logger.default.info('RequestStatus userId,false success', res)
             })
         })
 
@@ -202,12 +202,12 @@ export default {
         await this.hubStore.connection
           .invoke('BroadcastStatus', ...ourStatus)
           .catch(async (error) => {
-            logger.default.error(error)
+            logger.default.error('BroadcastStatus err', error)
           })
           .then(async (res) => {
-            logger.default.info(res)
+            logger.default.info('BroadcastStatus success', res)
           })
-        logger.default.info(ourStatus)
+        logger.default.info('ourStatus', ourStatus)
       })
     })
   },

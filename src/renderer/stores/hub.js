@@ -48,6 +48,7 @@ export const useHubStore = defineStore('hub', {
   }),
   actions: {
     async initHubConnection() {
+      logger.default.info('HUB: init')
       const userStore = useUserStore()
 
       // Init hub
@@ -115,8 +116,10 @@ export const useHubStore = defineStore('hub', {
     },
     async startHubConnection() {
       if (this.connected) {
+        logger.default.info('HUB: already started')
         return
       }
+      logger.default.info('HUB: start')
 
       const userStore = useUserStore()
       if (!userStore.isLoggedIn) {
