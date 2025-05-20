@@ -2,7 +2,8 @@ import {
   app,
   BrowserWindow,
   RenderProcessGoneDetails,
-  BrowserWindowConstructorOptions
+  BrowserWindowConstructorOptions,
+  shell
 } from 'electron'
 import Constants, { TrayOptions } from './utils/Constants'
 import IPCs from './IPCs'
@@ -115,6 +116,12 @@ export const createMainWindow = async (): Promise<BrowserWindow> => {
     })
   })
   // }
+
+  // Open links in outside browser
+  mainWindow.webContents.setWindowOpenHandler((details) => {
+    shell.openExternal(details.url) // Open URL in user's browser.
+    return { action: 'deny' } // Prevent the app from opening the URL.
+  })
 
   // Initialize IPC Communication
   IPCs.initialize()
