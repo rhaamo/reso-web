@@ -157,10 +157,7 @@ export default {
         .then(() => {
           this.photoSphereViewer = new PhotoSphereViewer({
             container: document.getElementById('sphere-world-preview'),
-            panorama: session.thumbnailUrl.replace(
-              'skyfrost-archive.resonite.com',
-              resoniteApiClient.SKYFROST_DOMAIN
-            ),
+            panorama: session.thumbnailUrl,
             navbar: false,
             defaultZoomLvl: 0,
             moveSpeed: 2

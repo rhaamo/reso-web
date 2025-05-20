@@ -1,42 +1,9 @@
 import Axios from 'axios'
 
+const API = 'https://api.resonite.com'
+
 // TODO handle thoses four better maybe ?
 // Probably move the MACHINEID and UID into the userStore and keep them in localstorage
-
-/* This is my own proxy for the Resonite API
-Because of a single reason, they still don't implement CORS: https://github.com/Yellow-Dog-Man/Resonite-Issues/issues/3537
-So it is impossible to even dev this app because any XHR or SignalR request will just be blocked by the browser...
-
-If curious the part of the nginx config is:
-location ^~ /happy/ {
-  add_header Access-Control-Allow-Origin 'http://localhost:5173' always;
-  add_header Access-Control-Allow-Headers '*, Accept, Authorization, UID, SecretClientAccessKey, x-signalr-user-agent, x-requested-with';
-  add_header Access-Control-Allow-Methods '*';
-  add_header Access-Control-Allow-Credentials 'true';
-  if ($request_method = 'OPTIONS') {
-    return 204;
-  }
-
-  proxy_http_version 1.1;
-  proxy_set_header Upgrade $http_upgrade;
-  proxy_set_header Connection $connection_upgrade;
-
-  proxy_pass https://api.resonite.com/;
-}
-
-The skyfrost is done the same way, but it's another domain and /thumbnails/ basically...
-We shouldn't need that, BUT, the photo viewer for the spherical preview does an XHR, which ... needs CORS
-
-bruh
-*/
-// const API_BASE = "https://reso-web.lan.otter.sh"
-const API_BASE = 'https://api.resonite.com'
-// we also have to replace this one because thanks no CORS :|
-// const SKYFROST_DOMAIN = "reso-web.lan.otter.sh"
-const SKYFROST_DOMAIN = 'skyfrost-archive.resonite.com'
-// const API = `${API_BASE}/happy`
-const API = `${API_BASE}/`
-
 const MACHINEID = GenerateRandomMachineId()
 const UID = await GenerateUID()
 const KEY =
@@ -178,8 +145,6 @@ const getSession = (userId, token, sessionId) => {
 
 const resoniteApiClient = {
   API,
-  API_BASE,
-  SKYFROST_DOMAIN,
   MACHINEID,
   UID,
   KEY,
