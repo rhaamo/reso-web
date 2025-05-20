@@ -38,6 +38,10 @@
     >
     <template v-else>No description provided.</template>
     <br />
+    <!-- TODO get the username for .ownerId from an API call, and probably cache it a bit -->
+    A world by {{ sessionDetails.correspondingWorldId.ownerId }}, last updated on
+    {{ formatDateYYYMMDD(sessionDetails.lastUpdate) }}.
+    <br />
     Tags:
     <BBadge variant="info" v-for="tag in sessionDetails.tags" :key="tag">{{ tag }}</BBadge>
     <br />
@@ -57,6 +61,7 @@
         ><template v-if="user.userID === sessionDetails.hostUserId">, session host</template>)
       </li>
     </ul>
+    {{ sessionDetails }}
   </BModal>
 </template>
 
@@ -124,6 +129,9 @@ export default {
     })
   },
   methods: {
+    formatDateYYYMMDD(date) {
+      return new Date(date).toLocaleString()
+    },
     fetchSessions() {
       logger.default.info('Refreshing sessions...')
       let filterParams = {
