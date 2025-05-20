@@ -124,10 +124,18 @@ export default {
   },
   mounted() {
     this.hubStore.initHubConnection().then(async () => {
-      // probably do something here
+      this.hubStore.connection.on('ReceiveSessionUpdate', this.handleSessionUpdate)
     })
   },
+  unmounted() {
+    this.hubStore.connection.off('ReceiveSessionUpdate', this.handleSessionUpdate)
+  },
   methods: {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    handleSessionUpdate(item) {
+      // spammy
+      //logger.default.info('Got session update: ', item)
+    },
     formatDateYYYMMDD(date) {
       return new Date(date).toLocaleString()
     },

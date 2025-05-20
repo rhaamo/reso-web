@@ -1,5 +1,9 @@
 import { defineStore } from 'pinia'
-import { HubConnectionBuilder, LogLevel as HubLogLevel } from '@microsoft/signalr'
+import {
+  HubConnectionBuilder,
+  LogLevel as HubLogLevel,
+  HttpTransportType
+} from '@microsoft/signalr'
 
 import logger from '@/renderer/logging'
 import { useUserStore } from '@/renderer/stores/user'
@@ -49,7 +53,9 @@ export const useHubStore = defineStore('hub', {
       // Init hub
       if (!this.connection) {
         this.connection = new HubConnectionBuilder()
-          .withUrl(`${resoniteApiClient.API}/hub`, {
+          .withUrl(`${resoniteApiClient.API.replace('https://', 'wss://')}/hub`, {
+            skipNegotiation: true,
+            transport: HttpTransportType.WebSockets,
             headers: {
               Authorization: userStore.fullToken
               // Are thoses two really required ? ReCon doesn't seems to have them
