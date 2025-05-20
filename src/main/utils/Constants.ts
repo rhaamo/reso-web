@@ -35,7 +35,8 @@ export default class Constants {
     nodeIntegration: false,
     contextIsolation: true,
     enableRemoteModule: false,
-    preload: join(__dirname, '../preload/index.js')
+    preload: join(__dirname, '../preload/index.js'),
+    webSecurity: false
   }
 
   static DEFAULT_TRAY_OPTIONS: TrayOptions = {

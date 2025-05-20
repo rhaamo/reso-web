@@ -10,10 +10,10 @@ import { createTray, hideWindow, showWindow } from './tray'
 
 const options = {
   width: Constants.IS_DEV_ENV ? 1500 : 1200,
-  height: 650,
+  height: 1000,
   tray: {
     // all optional values from DEFAULT_TRAY_OPTIONS can de defined here
-    enabled: true,
+    enabled: false,
     menu: false, // true, to use a tray menu ; false to toggle visibility on click on tray icon
     trayWindow: false // true, to use a tray floating window attached to top try icon
   }
@@ -100,6 +100,21 @@ export const createMainWindow = async (): Promise<BrowserWindow> => {
       mainWindow.setAlwaysOnTop(false)
     })
   }
+
+  // { RIP CORS :)
+  mainWindow.webContents.session.webRequest.onBeforeSendHeaders((details, callback) => {
+    callback({ requestHeaders: { Origin: '*', ...details.requestHeaders } })
+  })
+
+  mainWindow.webContents.session.webRequest.onHeadersReceived((details, callback) => {
+    callback({
+      responseHeaders: {
+        'Access-Control-Allow-Origin': ['*'],
+        ...details.responseHeaders
+      }
+    })
+  })
+  // }
 
   // Initialize IPC Communication
   IPCs.initialize()

@@ -9,6 +9,8 @@ import Vue from '@vitejs/plugin-vue'
 import { rmSync } from 'fs'
 import { resolve, dirname } from 'path'
 import { builtinModules } from 'module'
+import Components from 'unplugin-vue-components/vite'
+import { BootstrapVueNextResolver } from 'bootstrap-vue-next'
 
 const isDevEnv = process.env.NODE_ENV === 'development'
 
@@ -95,6 +97,9 @@ export default defineConfig(({ mode }) => {
     },
     plugins: [
       Vue(),
+      Components({
+        resolvers: [BootstrapVueNextResolver()]
+      }),
       VueJsx(),
       // Docs: https://github.com/vuetifyjs/vuetify-loader
       VuetifyPlugin({
