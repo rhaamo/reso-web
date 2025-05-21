@@ -23,6 +23,16 @@
         </BLink>
         <!-- TODO handle browsing links too -->
         <span v-else v-html="formatText(record.name)"></span>
+        <template v-if="record.recordType === 'object'">
+          <br />
+          <small>
+            <i class="ri-time-line"></i>&nbsp;{{ formatDate(record.lastModificationTime) }}
+            <br />
+            <BButton size="sm" @click.prevent="copyResdb(record)"
+              ><i class="ri-clipboard-line"></i> resdb://</BButton
+            >
+          </small>
+        </template>
       </BCard>
     </BCardGroup>
   </BContainer>
@@ -78,6 +88,9 @@ export default {
         default:
           return 'ri-file-unknow-line'
       }
+    },
+    formatDate(date) {
+      return new Date(date).toLocaleString()
     },
     fetchInventory(path = 'Inventory', userId = this.userStore.userId) {
       logger.default.info('Getting inventory...')
@@ -146,6 +159,11 @@ export default {
       let path = 'Inventory\\' + this.inventoryPath.slice(1, idx).join('\\')
       this.inventoryPath = this.inventoryPath.slice(0, idx)
       this.fetchInventory(path)
+    },
+    copyResdb(record) {
+      logger.default.info(record.assetUri)
+      const clipboardItem = new ClipboardItem({ ['text/plain']: record.assetUri })
+      navigator.clipboard.write([clipboardItem])
     }
   }
 }
