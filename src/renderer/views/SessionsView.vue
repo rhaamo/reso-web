@@ -1,53 +1,61 @@
 <template>
   <BContainer class="bv-example-row pt-5">
-    <BForm @submit.prevent="filterSessions()" class="mb-3">
-      <BRow>
-        <BCol cols="5">
-          <BFormGroup label-cols-lg="4" label="Session name:" label-for="sessionFiltersSessionName">
-            <BFormInput id="sessionFiltersSessionName" v-model="sessionsFilters.name" />
-          </BFormGroup>
-          <BFormGroup label-cols-lg="4" label="Host name:" label-for="sessionFiltersHostName">
-            <BFormInput id="sessionFiltersHostName" v-model="sessionsFilters.hostName" />
-          </BFormGroup>
-          <BFormGroup label-cols-lg="4" label="Min users:" label-for="sessionFiltersMinUsers">
-            <BFormSpinbutton
-              id="sessionFiltersMinUsers"
-              v-model="sessionsFilters.minActiveUsers"
-              min="0"
-              max="999"
-            />
-          </BFormGroup>
-        </BCol>
+    <BButton v-b-toggle="'collapse-filter-options'" variant="primary">Filter options</BButton>
 
-        <BCol cols="3">
-          <BFormCheckbox
-            id="filterIncludeEnded"
-            v-model="sessionsFilters.includeEnded"
-            name="filterIncludeEnded"
-          >
-            Include Ended
-          </BFormCheckbox>
-          <BFormCheckbox
-            id="filterIncludeEmptyHeadless"
-            v-model="sessionsFilters.includeEmptyHeadless"
-            name="filterIncludeEmptyHeadless"
-          >
-            Include Empty Headless
-          </BFormCheckbox>
-          <BFormCheckbox
-            id="filterIncludeIncompatible"
-            v-model="sessionsFilters.includeIncompatible"
-            name="filterIncludeIncompatible"
-          >
-            Include Incompatible
-          </BFormCheckbox>
-        </BCol>
+    <BCollapse id="collapse-filter-options">
+      <BForm @submit.prevent="filterSessions()" class="mb-3">
+        <BRow>
+          <BCol cols="5">
+            <BFormGroup
+              label-cols-lg="4"
+              label="Session name:"
+              label-for="sessionFiltersSessionName"
+            >
+              <BFormInput id="sessionFiltersSessionName" v-model="sessionsFilters.name" />
+            </BFormGroup>
+            <BFormGroup label-cols-lg="4" label="Host name:" label-for="sessionFiltersHostName">
+              <BFormInput id="sessionFiltersHostName" v-model="sessionsFilters.hostName" />
+            </BFormGroup>
+            <BFormGroup label-cols-lg="4" label="Min users:" label-for="sessionFiltersMinUsers">
+              <BFormSpinbutton
+                id="sessionFiltersMinUsers"
+                v-model="sessionsFilters.minActiveUsers"
+                min="0"
+                max="999"
+              />
+            </BFormGroup>
+          </BCol>
 
-        <BCol cols="1">
-          <BButton variant="primary" type="submit">filter</BButton>
-        </BCol>
-      </BRow>
-    </BForm>
+          <BCol cols="3">
+            <BFormCheckbox
+              id="filterIncludeEnded"
+              v-model="sessionsFilters.includeEnded"
+              name="filterIncludeEnded"
+            >
+              Include Ended
+            </BFormCheckbox>
+            <BFormCheckbox
+              id="filterIncludeEmptyHeadless"
+              v-model="sessionsFilters.includeEmptyHeadless"
+              name="filterIncludeEmptyHeadless"
+            >
+              Include Empty Headless
+            </BFormCheckbox>
+            <BFormCheckbox
+              id="filterIncludeIncompatible"
+              v-model="sessionsFilters.includeIncompatible"
+              name="filterIncludeIncompatible"
+            >
+              Include Incompatible
+            </BFormCheckbox>
+          </BCol>
+
+          <BCol cols="1">
+            <BButton variant="primary" type="submit">filter</BButton>
+          </BCol>
+        </BRow>
+      </BForm>
+    </BCollapse>
 
     <hr />
 
