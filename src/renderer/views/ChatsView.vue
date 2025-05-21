@@ -41,7 +41,7 @@
                     </p>
                     <p class="mb-1" v-if="contact.isAccepted">
                       <i class="ri-circle-fill"></i>
-                      {{ contact.onlineStatus || contact.contactStatus || 'Unknown' }}
+                      {{ contact.onlineStatus || 'Offline' }}
                     </p>
                   </div>
                 </BCol></BRow
@@ -62,16 +62,23 @@
                   <BRow v-if="msg.recipientId == selectedContact.id">
                     <BCol cols="6"></BCol>
                     <BCol cols="6">
-                      <div class="msgOurs" v-if="msg.messageType == 'Text'">{{ msg.content }}</div>
-                      <div class="msgOurs" v-else>Unhandled message type</div>
+                      <BCard class="msgOurs">
+                        <template v-if="msg.messageType == 'Text'">{{ msg.content }}</template>
+                        <template v-else>Unhandled message type</template>
+                        <template #footer>
+                          <span class="float-end">
+                            {{ getMsgTime(msg.sendTime) }}
+                          </span>
+                        </template>
+                      </BCard>
                     </BCol>
                   </BRow>
                   <BRow v-else>
                     <BCol cols="6">
-                      <div class="msgTheirs" v-if="msg.messageType == 'Text'">
-                        {{ msg.content }}
-                      </div>
-                      <div class="msgOurs" v-else>Unhandled message type</div>
+                      <BCard class="msgTheirs">
+                        <template v-if="msg.messageType == 'Text'">{{ msg.content }}</template>
+                        <template v-else>Unhandled message type</template>
+                      </BCard>
                     </BCol>
                     <BCol cols="6"></BCol>
                   </BRow>
@@ -141,7 +148,7 @@ export default {
     }
     // this.fetchUsers()
   },
-  unmounted() {
+  beforeUnmount() {
     // Remove the handlers
     this.hubStore.connection.off('ReceiveStatusUpdate', this.contactStatusUpdate)
     this.hubStore.connection.off('MessageSent', this.updateMessages)
@@ -194,7 +201,7 @@ export default {
             lastPresenceTimestamp: curDate,
             lastStatusChange: curDate,
             // hashSalt: '???', // Probably linked to the RSA key ?
-            appVersion: '0.0.0 beta of reso-web',
+            appVersion: '1.0.0 beta of reso-web',
             compatibilityHash: resoniteApiClient.COMPAT,
             // See hubSendTextMessage in store/hub.js for more infos about that RSA key
             // publicRSAKey: {
@@ -253,6 +260,10 @@ export default {
       } else {
         return null
       }
+    },
+    getMsgTime(date) {
+      let d = new Date(date)
+      return `${d.getHours()}:${d.getMinutes()}`
     },
     loadMessages(user) {
       logger.default.info(`We want to chat with ${user.id} (${user.contactUsername})`)

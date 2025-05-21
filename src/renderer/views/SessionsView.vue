@@ -185,7 +185,7 @@ export default {
       // TODO: Add session and Remove session
     })
   },
-  unmounted() {
+  beforeUnmount() {
     this.hubStore.connection.off('ReceiveSessionUpdate', this.handleSessionUpdate)
   },
   methods: {

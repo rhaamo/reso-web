@@ -41,7 +41,7 @@ export const useHubStore = defineStore('hub', {
             }
           })
           .withAutomaticReconnect()
-          .configureLogging(HubLogLevel.Debug)
+          .configureLogging(HubLogLevel.Critical)
           .build()
 
         this.connection.on('debug', (items) => {
