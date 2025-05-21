@@ -1,6 +1,56 @@
 <template>
   <BContainer class="bv-example-row pt-5">
-    Filters are hardcoded, only showing >1 active user.<br /><br />
+    <BForm @submit.prevent="filterSessions()" class="mb-3">
+      <BRow>
+        <BCol cols="5">
+          <BFormGroup label-cols-lg="4" label="Session name:" label-for="sessionFiltersSessionName">
+            <BFormInput id="sessionFiltersSessionName" v-model="sessionsFilters.name" />
+          </BFormGroup>
+          <BFormGroup label-cols-lg="4" label="Host name:" label-for="sessionFiltersHostName">
+            <BFormInput id="sessionFiltersHostName" v-model="sessionsFilters.hostName" />
+          </BFormGroup>
+          <BFormGroup label-cols-lg="4" label="Min users:" label-for="sessionFiltersMinUsers">
+            <BFormSpinbutton
+              id="sessionFiltersMinUsers"
+              v-model="sessionsFilters.minActiveUsers"
+              min="0"
+              max="999"
+            />
+          </BFormGroup>
+        </BCol>
+
+        <BCol cols="3">
+          <BFormCheckbox
+            id="filterIncludeEnded"
+            v-model="sessionsFilters.includeEnded"
+            name="filterIncludeEnded"
+          >
+            Include Ended
+          </BFormCheckbox>
+          <BFormCheckbox
+            id="filterIncludeEmptyHeadless"
+            v-model="sessionsFilters.includeEmptyHeadless"
+            name="filterIncludeEmptyHeadless"
+          >
+            Include Empty Headless
+          </BFormCheckbox>
+          <BFormCheckbox
+            id="filterIncludeIncompatible"
+            v-model="sessionsFilters.includeIncompatible"
+            name="filterIncludeIncompatible"
+          >
+            Include Incompatible
+          </BFormCheckbox>
+        </BCol>
+
+        <BCol cols="1">
+          <BButton variant="primary" type="submit">filter</BButton>
+        </BCol>
+      </BRow>
+    </BForm>
+
+    <hr />
+
     <BCardGroup columns>
       <a
         :href="`#${session.sessionId}`"
@@ -88,14 +138,6 @@ import resoniteApiClient from '@/renderer/resonite-api/client'
 import { useModal } from 'bootstrap-vue-next'
 import { Viewer as PhotoSphereViewer } from '@photo-sphere-viewer/core'
 
-// Filters to do:
-// - session name
-// - host name
-// - minimum users
-// - include ended
-// - include empty headless
-// - include incompatible
-
 export default {
   setup: () => ({
     userStore: useUserStore(),
@@ -106,7 +148,15 @@ export default {
     sessions: [],
     showSessionInfosModal: false,
     sessionDetails: {},
-    photoSphereViewer: null
+    photoSphereViewer: null,
+    sessionsFilters: {
+      name: '',
+      hostName: '',
+      minActiveUsers: 1,
+      includeEnded: false,
+      includeEmptyHeadless: false,
+      includeIncompatible: false
+    }
   }),
   created() {
     logger.default.info('Chats: check for login...')
@@ -141,13 +191,8 @@ export default {
     },
     fetchSessions() {
       logger.default.info('Refreshing sessions...')
-      let filterParams = {
-        minActiveUsers: 1,
-        includeEnded: false,
-        includeEmptyHeadless: false
-      }
       resoniteApiClient
-        .getSessions(this.userStore.userId, this.userStore.token, filterParams)
+        .getSessions(this.userStore.userId, this.userStore.token, this.sessionsFilters)
         .then((result) => {
           logger.default.info('Fetched sessions', result)
           this.sessions = result.data
@@ -157,6 +202,10 @@ export default {
           // TODO error handling
           this.sessions = []
         })
+    },
+    filterSessions() {
+      logger.default.info('Reloading sessions with new filter')
+      this.fetchSessions()
     },
     resDbToAsset(resdb) {
       if (resdb) {
