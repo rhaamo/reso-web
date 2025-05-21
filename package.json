@@ -1,6 +1,6 @@
 {
-  "name": "Reso-WEB",
-  "appId": "sh.otter.reso-web",
+  "name": "resoweb",
+  "appId": "sh.otter.resoweb",
   "version": "1.0.0",
   "description": "Something-something Resonite Chat client",
   "author": "Ottpossum <codewithmypaws@otter.sh>",
