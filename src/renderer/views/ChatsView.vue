@@ -145,9 +145,23 @@ export default {
           logger.default.info('ReceiveStatusUpdate:', items)
         })
         // IDK, initial own status ?
-        await this.hubStore.hubInitializeStatus()
+        // Resonite doesn't even seems to send that...
+        // await this.hubStore.hubInitializeStatus()
 
-        // Ask for a status update for all contacts ?
+        // Then it does a stream call for InitializeContact, which should returns your contact list
+        await this.hubStore.connection.stream('InitializeContacts').subscribe({
+          next: (item) => {
+            console.log('next', item)
+          },
+          complete: (item) => {
+            console.log('complete', item)
+          },
+          error: (err) => {
+            console.log('err', err)
+          }
+        })
+
+        // Then a RequestStatus, with null and false as arguments
         // TODO Migrate that to a function located in hubStore
         await this.hubStore.connection
           .invoke('RequestStatus', null, false)
@@ -160,37 +174,52 @@ export default {
 
         // Ask for a status update for a specific contact ?
         // TODO Migrate that to a function located in hubStore
-        this.contacts.forEach(async (contact) => {
-          await this.hubStore.connection
-            .invoke('RequestStatus', contact.id, false)
-            .catch(async (error) => {
-              logger.default.debug(`Asking refresh for ${contact.id}`)
-              logger.default.error('RequestStatus userId,false err', error)
-            })
-            .then((res) => {
-              logger.default.debug(`Asking refresh for ${contact.id}`)
-              logger.default.info('RequestStatus userId,false success', res)
-            })
-        })
+        // not sure if needed, if we can get the status updates probably ?
+        // this.contacts.forEach(async (contact) => {
+        //   await this.hubStore.connection
+        //     .invoke('RequestStatus', contact.id, false)
+        //     .catch(async (error) => {
+        //       logger.default.debug(`Asking refresh for ${contact.id}`)
+        //       logger.default.error('RequestStatus userId,false err', error)
+        //     })
+        //     .then((res) => {
+        //       logger.default.debug(`Asking refresh for ${contact.id}`)
+        //       logger.default.info('RequestStatus userId,false success', res)
+        //     })
+        // })
 
         // Send my own status update
         // This should be moved into the navbar on the right with a dropdown for the status
-        let curDate = new Date()
+        let curDate = new Date(Date.now()).toISOString()
         let ourStatus = [
           {
             userId: this.userStore.userId, // ourself
-            onlineStatus: 'Online', // Online
-            outputDevice: 'Unknown',
-            sessionType: 'ChatClient', // Chat Client
             userSessionId: this.userStore.userSessionId,
+            sessionType: 'ChatClient', // Chat Client
+            outputDevice: 'Unknown',
+            isMobile: false,
+            onlineStatus: 'Online', // Online
             isPresent: true,
-            lastPresenceTimestamp: curDate.toISOString(),
-            lastStatusChange: curDate.toISOString(),
-            // currentSessionIndex: -1,
-            // sessions: [],
-            compatibilityHash: resoniteApiClient.COMPAT,
+            lastPresenceTimestamp: curDate,
+            lastStatusChange: curDate,
+            // hashSalt: '???', // Probably linked to the RSA key ?
             appVersion: '0.0.0 beta of reso-web',
-            isMobile: false
+            compatibilityHash: resoniteApiClient.COMPAT,
+            // See hubSendTextMessage in store/hub.js for more infos about that RSA key
+            // publicRSAKey: {
+            //   Exponent: 'xxx',
+            //   Modulus: 'xxx',
+            //   P: null,
+            //   Q: null,
+            //   DP: null,
+            //   DQ: null,
+            //   InverseQ: null,
+            //   D: null
+            // },
+            // I guess if there is no session, it would be -1 ?
+            // Resonite did connect to my home and has a session filled then... (and sessionIndex 1, not 0)
+            currentSessionIndex: -1,
+            sessions: []
           },
           {
             // 0 Public, 1 AllContacts, SpecificContacts, BroadcastKey, ConnectionIds

@@ -153,13 +153,29 @@ export const useHubStore = defineStore('hub', {
 
       let msg = {
         id: `MSG-${uuidv4()}`,
-        senderId: userStore.userId,
         ownerId: userStore.userId,
+        senderId: userStore.userId,
         recipientId: toUserId,
+        // The senderUserSessionId is found when resonite does a PUT on /users/U-serId/rsa/<*UUID*> with an RSA key:
+        /*
+        "Exponent": "MEOW",
+        "Modulus": "rg+farts==",
+        "P": null,
+        "Q": null,
+        "DP": null,
+        "DQ": null,
+        "InverseQ": null,
+        "D": null
+        */
+        // IDK if that UUID is really needed
+        // senderUserSessionId: uuidv4(),
+        senderUserSessionId: userStore.userSessionId,
         messageType: 'Text',
-        sendTime: new Date().toISOString(),
-        // lastUpdateTime: new Date().toISOString(),
-        content: message
+        content: message,
+        sendTime: new Date(Date.now()).toISOString(),
+        lastUpdateTime: '0001-01-01T00:00:00', // *shrug*
+        readTime: null,
+        isMigrated: false
       }
 
       logger.default.info('Sending TextMessage:', msg)
