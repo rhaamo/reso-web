@@ -2,7 +2,8 @@
 
 This should be an app to chat and manage inventory and whatnot but for now only parts of chat is implemented and listing sessions with details.
 
-<img src="./screenshot.png" height="300px"/>
+<img src="./screenshot1.png" height="300px"/>
+<img src="./screenshot2.png" height="300px"/>
 
 ## Features
 
