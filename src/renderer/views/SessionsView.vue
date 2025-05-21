@@ -182,6 +182,7 @@ export default {
   mounted() {
     this.hubStore.initHubConnection().then(async () => {
       this.hubStore.connection.on('ReceiveSessionUpdate', this.handleSessionUpdate)
+      // TODO: Add session and Remove session
     })
   },
   unmounted() {
@@ -195,6 +196,7 @@ export default {
     handleSessionUpdate(item) {
       // spammy
       //logger.default.info('Got session update: ', item)
+      // TODO FIXME pls
     },
     formatDateYYYMMDD(date) {
       return new Date(date).toLocaleString()
