@@ -33,5 +33,5 @@ jobs:
         with:
           name: debug-build
           path: |
-            release/*/resoweb*_64.exe
-            release/*/resoweb*_64.zip
+            release/*/resoweb*_x64.exe
+            release/*/resoweb*_x64.zip
