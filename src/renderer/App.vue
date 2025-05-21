@@ -4,10 +4,13 @@
     <BNavbarToggle target="nav-collapse" />
     <BCollapse id="nav-collapse" is-nav>
       <BNavbarNav>
-        <BNavItem :to="{ name: 'chats' }">Chat</BNavItem>
-        <BNavItem :to="{ name: 'sessions' }">Sessions</BNavItem>
-        <BNavItem :to="{ name: 'inventory' }">Inventory</BNavItem>
-        <BNavItem :to="{ name: 'about' }">About</BNavItem>
+        <BNavItem :to="{ name: 'chats' }"><i class="ri-message-2-line"></i> Chats</BNavItem>
+        <BNavItem :to="{ name: 'sessions' }"
+          ><i class="ri-user-community-line"></i> Sessions</BNavItem
+        >
+        <BNavItem :to="{ name: 'inventory' }"><i class="ri-folders-line"></i> Inventory</BNavItem>
+        <BNavItem :to="{ name: 'worlds' }"><i class="ri-global-line"></i> Worlds</BNavItem>
+        <BNavItem :to="{ name: 'about' }"><i class="ri-question-mark"></i> About</BNavItem>
       </BNavbarNav>
       <!-- Right aligned nav items -->
       <BNavbarNav class="ms-auto mb-2 mb-lg-0">
