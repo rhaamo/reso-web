@@ -10,14 +10,28 @@ This is an Electron/VueJS app to chat and manage inventory and whatnot for reson
 ## Features
 
 - Chats
-  - List users with status
-  - Send messages
-  - Receive them
-- Can fetch an user messages history
-- List sessions
-  - Filtering, session details modal with 3D Sphere Preview
+  - [x] List users with status
+  - [x] Send messages
+  - [x] Receive them
+  - [x] Realtime updates
+  - [ ] Handle non-Text messages
+  - [ ] Realtime notifications
+  - [ ] Change own status
+- Sessions
+  - [x] List with details
+  - [ ] Pagination
+  - [ ] Realtime update of sessions (add/delete/update)
+  - [ ] Generate go.resonite links ?
 - Inventory
-  - Can list your inventory and browse it (except for Links)
+  - [x] Basic listing
+  - [ ] Get Object resdb:/// links
+  - [ ] Browse public dirs
+  - [ ] Download asset
+  - [ ] Upload asset
+- Worlds
+  - [ ] Basic listing
+  - [ ] Filtering
+  - [ ] Pagination
 
 ## Build or something
 
@@ -31,4 +45,4 @@ This is an Electron/VueJS app to chat and manage inventory and whatnot for reson
 
 To Resonite for not having any CORS to permits us to make apps from the browser :| https://github.com/Yellow-Dog-Man/Resonite-Issues/issues/3537
 
-So the whole APIs are usable only through a custom proxy, or with electron web security disabled, yay,,,
+So the whole APIs are usable only through a custom proxy, a full-native (non-browser) app, or with electron web security disabled, yay,,,
