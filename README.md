@@ -17,6 +17,7 @@ This is an Electron/VueJS app to chat and manage inventory and whatnot for reson
   - [x] Realtime updates
   - [ ] Handle non-Text messages
   - [ ] Change own status
+  - [ ] Show in which session the user is active
 - Sessions
   - [x] List with details
   - [ ] Pagination
