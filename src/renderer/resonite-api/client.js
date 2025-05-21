@@ -5,7 +5,6 @@ const API = 'https://api.resonite.com'
 // TODO handle thoses four better maybe ?
 // Probably move the MACHINEID and UID into the userStore and keep them in localstorage
 const MACHINEID = GenerateRandomMachineId()
-const UID = GenerateUID()
 const KEY =
   'oi+ISZuYtMYtpruYHLQLPkXgPaD+IcaRNXPI7b3Z0iYe5+AcccouLYFI9vloMmYEYDlE1PhDL52GsddfxgQeK4Z_hem84t1OXGUdScFkLSMhJA2te86LBL_rFL4JjO4F_hHHIJH1Gm1IYVuvBQjpb89AJ0D6eamd7u4MxeWeEVE='
 
@@ -30,17 +29,16 @@ function GenerateRandomMachineId() {
   return result
 }
 
-function GenerateUID() {
+async function GenerateUID() {
   const data = `resonet-${btoa(getRandomBytes(16))}`
   //result = CryptoJS.createHash('sha256').update(data).digest('hex').toUpperCase();
-  window.crypto.subtle.digest('SHA-256', new TextEncoder().encode(data)).then((resBuffer) => {
-    const resArray = Array.from(new Uint8Array(resBuffer))
-    return resArray.map((b) => b.toString(16).padStart(2, '0')).join('')
-  })
+  const resBuffer = await window.crypto.subtle.digest('SHA-256', new TextEncoder().encode(data))
+  const resArray = Array.from(new Uint8Array(resBuffer))
+  return resArray.map((b) => b.toString(16).padStart(2, '0')).join('')
 }
 
 // Login with User and Password (+TOTP if any)
-const loginUserPassword = (username, password, totp) => {
+const loginUserPassword = async (username, password, totp) => {
   const loginData = {
     username: username,
     authentication: {
@@ -54,7 +52,7 @@ const loginUserPassword = (username, password, totp) => {
   return Axios.post(`${API}/userSessions`, JSON.stringify(loginData), {
     headers: {
       'Content-Type': 'application/json',
-      UID: UID,
+      UID: await GenerateUID(),
       TOTP: totp ?? null
     },
     withCredentials: false
@@ -171,7 +169,6 @@ const getGroupRecordsAt = (groupId, path) => {
 const resoniteApiClient = {
   API,
   MACHINEID,
-  UID,
   KEY,
   COMPAT,
   loginUserPassword,
