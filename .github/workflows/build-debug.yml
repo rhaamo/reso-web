@@ -28,10 +28,15 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Archive artifacts
+      - name: Archive artifacts (exe)
         uses: actions/upload-artifact@v4
         with:
-          name: debug-build
+          name: windows-x64-exe
           path: |
             release/*/resoweb*_x64.exe
+      - name: Archive artifacts (zip)
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-x64-zip
+          path: |
             release/*/resoweb*_x64.zip
