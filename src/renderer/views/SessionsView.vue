@@ -68,8 +68,7 @@
       >
         <BCard style="max-width: 20rem" :img-src="session.thumbnailUrl" img-top>
           <BCardImg></BCardImg>
-          <!-- TODO FIXME no colors with v-html ? -->
-          <BCardTitle v-html="session.name"></BCardTitle>
+          <BCardTitle v-html="formatText(session.name)"></BCardTitle>
           <BCardText> {{ session.totalActiveUsers }}/{{ session.maxUsers }} Online </BCardText>
         </BCard>
       </a>
@@ -83,19 +82,18 @@
     v-if="showSessionInfosModal"
     v-model="showSessionInfosModal"
     id="modal-session-infos"
-    :title="sessionDetails.name"
   >
+    <template #title><span v-html="formatText(sessionDetails.name)"></span></template>
     <div
       id="sphere-world-preview"
       ref="sphere-world-preview"
       style="width: 48rem; height: 30rem"
     ></div>
     <hr />
-    <template v-if="sessionDetails.description"
-      >Description: {{ sessionDetails.description }}</template
-    >
-    <template v-else>No description provided.</template>
-    <br />
+    <template v-if="sessionDetails.description">
+      <span v-html="formatText(sessionDetails.description)"></span>
+      <hr />
+    </template>
     <template v-if="sessionDetails.correspondingWorldId">
       <!-- TODO get the username for .ownerId from an API call, and probably cache it a bit -->
       A world by {{ sessionDetails.correspondingWorldId.ownerId }}, last updated on
@@ -145,6 +143,7 @@ import { useHubStore } from '@/renderer/stores/hub'
 import resoniteApiClient from '@/renderer/resonite-api/client'
 import { useModal } from 'bootstrap-vue-next'
 import { Viewer as PhotoSphereViewer } from '@photo-sphere-viewer/core'
+import { parseResoniteText } from '@/renderer/utils/resonite'
 
 export default {
   setup: () => ({
@@ -189,6 +188,9 @@ export default {
     this.hubStore.connection.off('ReceiveSessionUpdate', this.handleSessionUpdate)
   },
   methods: {
+    formatText(text) {
+      return parseResoniteText(text)
+    },
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     handleSessionUpdate(item) {
       // spammy

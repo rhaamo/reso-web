@@ -41,6 +41,7 @@
     "bootstrap": "^5.3.6",
     "bootstrap-vue-next": "^0.29.3",
     "js-logger": "^1.6.1",
+    "olical-color": "^1.0.1",
     "pinia": "^3.0.2",
     "pinia-plugin-persistedstate": "^4.3.0",
     "remixicon": "^4.6.0",
