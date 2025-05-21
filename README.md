@@ -8,7 +8,8 @@ This should be an app to chat and manage inventory and whatnot but for now only 
 
 - Can list users (no status)
 - Can fetch an user messages history
-- List sessions with 3D sphere viewer and details (sessions list is filtered hard for now for only minUsers=1)
+- List sessions
+  - Filtering, session details modal with 3D Sphere Preview
 
 ## It's broken :(
 
