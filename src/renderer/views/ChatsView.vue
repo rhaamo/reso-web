@@ -2,7 +2,7 @@
   <main class="pt-5">
     <BContainer class="bv-example-row">
       <BRow>
-        <BCol cols="3">
+        <BCol cols="4">
           <BListGroup>
             <BListGroupItem
               :active="selectedContact.id == contact.id"
@@ -40,7 +40,8 @@
                       <i class="ri-question-mark"></i> Request sent
                     </p>
                     <p class="mb-1" v-if="contact.isAccepted">
-                      <i class="ri-circle-fill"></i> Status
+                      <i class="ri-circle-fill"></i>
+                      {{ contact.onlineStatus || contact.contactStatus || 'Unknown' }}
                     </p>
                   </div>
                 </BCol></BRow
@@ -56,7 +57,7 @@
               <h6 class="mb-0">{{ selectedContact.contactUsername }}</h6>
             </template>
             <BCardText class="allMsgs">
-              <div ref="messagesContainer">
+              <div ref="messagesContainer" id="messagesContainer">
                 <div v-for="msg in selectedContactMessages" :key="msg.id">
                   <BRow v-if="msg.recipientId == selectedContact.id">
                     <BCol cols="6"></BCol>
@@ -75,6 +76,7 @@
                     <BCol cols="6"></BCol>
                   </BRow>
                 </div>
+                <div ref="bottomOfMessages" id="bottomOfMessages"></div>
               </div>
             </BCardText>
             <template #footer>
@@ -110,6 +112,7 @@ import logger from '@/renderer/logging'
 import { useUserStore } from '@/renderer/stores/user'
 import { useHubStore } from '@/renderer/stores/hub'
 import resoniteApiClient from '@/renderer/resonite-api/client'
+// import { ref } from 'vue'
 
 // TODO: contacts filtering by status, if I manage to get status :')
 
@@ -136,30 +139,34 @@ export default {
     } else {
       logger.default.info('we are')
     }
-    this.fetchUsers()
+    // this.fetchUsers()
+  },
+  unmounted() {
+    // Remove the handlers
+    this.hubStore.connection.off('ReceiveStatusUpdate', this.contactStatusUpdate)
+    this.hubStore.connection.off('MessageSent', this.updateMessages)
+    this.hubStore.connection.off('ReceiveMessage', this.updateMessages)
   },
   mounted() {
     this.$nextTick(() => {
       this.hubStore.initHubConnection().then(async () => {
-        this.hubStore.connection.on('ReceiveStatusUpdate', (items) => {
-          logger.default.info('ReceiveStatusUpdate:', items)
-        })
-        // IDK, initial own status ?
-        // Resonite doesn't even seems to send that...
-        // await this.hubStore.hubInitializeStatus()
-
-        // Then it does a stream call for InitializeContact, which should returns your contact list
+        // First do a call for InitializeContact, which should returns your contact list
         await this.hubStore.connection.stream('InitializeContacts').subscribe({
           next: (item) => {
-            console.log('next', item)
+            this.contactStatusUpdate(item)
           },
-          complete: (item) => {
-            console.log('complete', item)
-          },
+          complete: () => {},
           error: (err) => {
-            console.log('err', err)
+            console.log('Error while doing a ReceiveStatusUpdate', err)
           }
         })
+
+        // Then register a handler to get status updates
+        this.hubStore.connection.on('ReceiveStatusUpdate', this.contactStatusUpdate)
+        // And one for messages sent
+        this.hubStore.connection.on('MessageSent', this.updateMessages)
+        // And received
+        this.hubStore.connection.on('ReceiveMessage', this.updateMessages)
 
         // Then a RequestStatus, with null and false as arguments
         // TODO Migrate that to a function located in hubStore
@@ -171,22 +178,6 @@ export default {
           .then((res) => {
             logger.default.info('RequestStatus null,false success', res)
           })
-
-        // Ask for a status update for a specific contact ?
-        // TODO Migrate that to a function located in hubStore
-        // not sure if needed, if we can get the status updates probably ?
-        // this.contacts.forEach(async (contact) => {
-        //   await this.hubStore.connection
-        //     .invoke('RequestStatus', contact.id, false)
-        //     .catch(async (error) => {
-        //       logger.default.debug(`Asking refresh for ${contact.id}`)
-        //       logger.default.error('RequestStatus userId,false err', error)
-        //     })
-        //     .then((res) => {
-        //       logger.default.debug(`Asking refresh for ${contact.id}`)
-        //       logger.default.info('RequestStatus userId,false success', res)
-        //     })
-        // })
 
         // Send my own status update
         // This should be moved into the navbar on the right with a dropdown for the status
@@ -242,19 +233,19 @@ export default {
     })
   },
   methods: {
-    fetchUsers() {
-      logger.default.info('Refreshing contacts...')
-      resoniteApiClient
-        .fetchContacts(this.userStore.userId, this.userStore.token)
-        .then((result) => {
-          logger.default.info('Fetched contacts', result)
-          this.contacts = result.data
-        })
-        .catch((error) => {
-          logger.default.error('Cannot fetch contacts', error)
-          // TODO error handling
-          this.contacts = []
-        })
+    contactStatusUpdate(statusUpdate) {
+      logger.default.info('contactStatusUpdate', statusUpdate)
+      let contactIdx = this.contacts.findIndex((el) => el.id === statusUpdate.userId)
+      if (contactIdx && contactIdx >= 0) {
+        console.log('contact idx', contactIdx)
+        // Merge the contact with the status update
+        logger.default.info(`User ${statusUpdate.id} already exist, merging status`)
+        this.contacts[contactIdx] = Object.assign(this.contacts[contactIdx], statusUpdate)
+      } else {
+        // Create a new user
+        logger.default.info(`User ${statusUpdate.id} didn't exist`)
+        this.contacts.push(statusUpdate)
+      }
     },
     resDbToAsset(resdb) {
       if (resdb) {
@@ -270,11 +261,17 @@ export default {
       resoniteApiClient
         .getUserMessages(this.userStore.userId, this.userStore.token, user.id, null)
         .then((response) => {
+          // Reverse to have latest message at the bottom
           this.selectedContactMessages = response.data.reverse()
-          // TODO FIXME broken lol
-          // const messagesContainer = ref()
-          // messagesContainer.scrollTop = messagesContainer.scrollHeight
+
+          // Then scroll to bottom of messages
+          this.goToBottomOfMessages()
         })
+    },
+    goToBottomOfMessages() {
+      this.$nextTick(() => {
+        this.$refs.bottomOfMessages.scrollIntoView({ behavior: 'smooth' })
+      })
     },
     sendMessage() {
       logger.default.info(
@@ -291,6 +288,12 @@ export default {
           logger.default.error('Cannot send message', error)
           // TODO error handling
         })
+    },
+    updateMessages(message) {
+      logger.default.info('A message has been sent:', message)
+      this.selectedContactMessages.push(message)
+      // Then scroll to bottom of messages
+      this.goToBottomOfMessages()
     }
   }
 }

@@ -1,6 +1,6 @@
 # Reso-WEB
 
-This should be an app to chat and manage inventory and whatnot for resonite.
+This is an Electron/VueJS app to chat and manage inventory and whatnot for resonite.
 
 <p float="left">
 <img src="./screenshot1.png" height="300px"/>
@@ -9,7 +9,10 @@ This should be an app to chat and manage inventory and whatnot for resonite.
 
 ## Features
 
-- Can list users (no status)
+- Chats
+  - List users with status
+  - Send messages
+  - Receive them
 - Can fetch an user messages history
 - List sessions
   - Filtering, session details modal with 3D Sphere Preview
