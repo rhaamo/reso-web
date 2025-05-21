@@ -12,34 +12,6 @@ import { v4 as uuidv4 } from 'uuid'
 
 // Some docs: https://github.com/Lexevolution/Skyfrost-Unofficial-Docs/
 
-// All .send or .invoke on the SignalR thingy ends up with:
-// {"type":3,"invocationId":"4","result":null}
-// so idk... but we receive correctly the session updates
-// it's just that anything send to it just seems to silently fail
-
-// example:
-// TX: {"arguments":[],"invocationId":"0","target":"InitializeStatus","type":1}
-// RX: {"type":3,"invocationId":"0","result":null}
-// ReCon send:
-// {type: 1, invocationId: 38c6f633-ef56-45cc-884c-63577d161b08, target: InitializeStatus, arguments: []}
-
-// send message from ReCon
-// {type: 1,
-// invocationId: 818ee13c-41d0-48d9-9c8d-4997a6899eb2,
-// target: SendMessage,
-// arguments:
-// [
-// {
-// id: MSG-cd12647e-1b32-48bd-93e7-f6a8abbaeac4,
-// recipientId: U-1QStUlUj0gy,
-// senderId: U-1QStUlUj0gy,
-// ownerId: U-1QStUlUj0gy,
-// messageType: Text,
-// content: woof, sendTime: 2025-05-19T20:21:45.968555Z}]}
-// well the hub returns
-// {type: 3, invocationId: 818ee13c-41d0-48d9-9c8d-4997a6899eb2, result: null}
-// anyway...
-
 export const useHubStore = defineStore('hub', {
   persist: false,
   state: () => ({
@@ -54,44 +26,28 @@ export const useHubStore = defineStore('hub', {
       // Init hub
       if (!this.connection) {
         this.connection = new HubConnectionBuilder()
-          .withUrl(`${resoniteApiClient.API.replace('https://', 'wss://')}/hub`, {
-            skipNegotiation: true,
-            transport: HttpTransportType.WebSockets,
+          // Here is a fun one!
+          // YOU CAN'T SEND CUSTOM HEADERS WITH WEBSOCKETS FROM THE BROWSER
+          // https://github.com/Azure/azure-signalr/issues/1495#issuecomment-1238386753
+          .withUrl(`${resoniteApiClient.API}/hub`, {
+            // skipNegotiation: true,
+            // No websocket for us sadly
+            transport: HttpTransportType.LongPolling,
             headers: {
-              Authorization: userStore.fullToken
+              Authorization: userStore.fullToken,
               // Are thoses two really required ? ReCon doesn't seems to have them
-              // "UID": resoniteApiClient.MACHINEID,
-              // "SecretClientAccessKey": resoniteApiClient.KEY
+              UID: resoniteApiClient.MACHINEID,
+              SecretClientAccessKey: resoniteApiClient.KEY
             }
           })
           .withAutomaticReconnect()
           .configureLogging(HubLogLevel.Debug)
           .build()
 
-        this.connection.on('ReceiveSessionUpdate', () => {
-          // spammy so ignore for now
-          // logger.default.debug('ReceiveSessionUpdate:', items)
-        })
-
         this.connection.on('debug', (items) => {
-          logger.default.info('debug:', items)
+          logger.default.info('Debug from the HUB:', items)
         })
 
-        this.connection.on('ReceiveStatusUpdate', (items) => {
-          logger.default.info('ReceiveStatusUpdate:', items)
-        })
-
-        this.connection.on('RemoveSession', () => {
-          // logger.default.info('RemoveSession:', items)
-        })
-
-        this.connection.on('ReceiveMessage', (items) => {
-          logger.default.info('ReceiveMessage:', items)
-        })
-
-        this.connection.on('MessageSent', (items) => {
-          logger.default.info('MessageSent:', items)
-        })
         logger.default.info('Resonite SignalR HUB Initialized')
       } else {
         logger.default.info('Resonite SignalR HUB Already initialized, skipping')
