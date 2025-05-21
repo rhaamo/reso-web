@@ -67,6 +67,10 @@
                         <template v-else>Unhandled message type</template>
                         <template #footer>
                           <span class="float-end">
+                            <template v-if="!msg.readTime">
+                              <i class="ri-check-line"></i>&nbsp;
+                            </template>
+                            <template v-else> <i class="ri-check-double-line"></i>&nbsp; </template>
                             {{ getMsgTime(msg.sendTime) }}
                           </span>
                         </template>
@@ -78,6 +82,15 @@
                       <BCard class="msgTheirs">
                         <template v-if="msg.messageType == 'Text'">{{ msg.content }}</template>
                         <template v-else>Unhandled message type</template>
+                        <template #footer>
+                          <span class="float-end">
+                            <template v-if="!msg.readTime">
+                              <i class="ri-check-line"></i>&nbsp;
+                            </template>
+                            <template v-else> <i class="ri-check-double-line"></i>&nbsp; </template>
+                            {{ getMsgTime(msg.sendTime) }}
+                          </span>
+                        </template>
                       </BCard>
                     </BCol>
                     <BCol cols="6"></BCol>
@@ -100,11 +113,11 @@
 
 <style scoped>
 .msgOurs {
-  background-color: blue;
+  background-color: #72333f;
 }
 
 .msgTheirs {
-  background-color: grey;
+  background-color: #3d3233;
 }
 
 .allMsgs {
