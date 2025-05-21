@@ -9,6 +9,8 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     BBadge: typeof import('bootstrap-vue-next/components/BBadge')['BBadge']
+    BBreadcrumb: typeof import('bootstrap-vue-next/components/BBreadcrumb')['BBreadcrumb']
+    BBreadcrumbItem: typeof import('bootstrap-vue-next/components/BBreadcrumb')['BBreadcrumbItem']
     BButton: typeof import('bootstrap-vue-next/components/BButton')['BButton']
     BCard: typeof import('bootstrap-vue-next/components/BCard')['BCard']
     BCardGroup: typeof import('bootstrap-vue-next/components/BCard')['BCardGroup']
@@ -25,6 +27,7 @@ declare module 'vue' {
     BFormInput: typeof import('bootstrap-vue-next/components/BFormInput')['BFormInput']
     BFormSpinbutton: typeof import('bootstrap-vue-next/components/BFormSpinbutton')['BFormSpinbutton']
     BImg: typeof import('bootstrap-vue-next/components/BImg')['BImg']
+    BLink: typeof import('bootstrap-vue-next/components/BLink')['BLink']
     BListGroup: typeof import('bootstrap-vue-next/components/BListGroup')['BListGroup']
     BListGroupItem: typeof import('bootstrap-vue-next/components/BListGroup')['BListGroupItem']
     BModal: typeof import('bootstrap-vue-next/components/BModal')['BModal']

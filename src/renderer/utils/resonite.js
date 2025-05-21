@@ -119,7 +119,6 @@ function parseResoniteText(input) {
         // To handle https://github.com/Nutcake/ReCon/blob/main/lib/string_formatter.dart#L190
         // mark, size
 
-        // Add more custom tags here
         default:
           transformStack.push({
             tag: tagName,

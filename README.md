@@ -10,6 +10,8 @@ This should be an app to chat and manage inventory and whatnot but for now only 
 - Can fetch an user messages history
 - List sessions
   - Filtering, session details modal with 3D Sphere Preview
+- Inventory
+  - Can list your inventory and browse it (except for Links)
 
 ## It's broken :(
 

@@ -143,6 +143,30 @@ const getSession = (userId, token, sessionId) => {
   })
 }
 
+const getUserRecordsAt = (userId, token, path) => {
+  return Axios.get(`${API}/users/${userId}/records?path=${path}`, {
+    headers: {
+      Authorization: `res ${userId}:${token}`
+    }
+  })
+}
+
+const getUserRecord = (userId, token, recordId) => {
+  return Axios.get(`${API}/users/${userId}/records/${recordId}`, {
+    headers: {
+      Authorization: `res ${userId}:${token}`
+    }
+  })
+}
+
+const getGroupRecordByPath = (groupId, path) => {
+  return Axios.get(`${API}/groups/${groupId}/records/${path}`)
+}
+
+const getGroupRecordsAt = (groupId, path) => {
+  return Axios.get(`${API}/groups/${groupId}/records?path=${path}`)
+}
+
 const resoniteApiClient = {
   API,
   MACHINEID,
@@ -157,7 +181,11 @@ const resoniteApiClient = {
   getUserMessages,
   getAssetsDomainUrl,
   getSessions,
-  getSession
+  getSession,
+  getUserRecordsAt,
+  getUserRecord,
+  getGroupRecordByPath,
+  getGroupRecordsAt
 }
 
 export default resoniteApiClient
