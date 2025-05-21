@@ -49,8 +49,15 @@ This is an Electron/VueJS app to chat and manage inventory and whatnot for reson
 - git clone
 - install nodejs + yarn
 - yarn install
-- yarn dev
-- idk
+
+- dev:
+  - `yarn dev`
+- build windows:
+  - `yarn run build:win`
+- build mac (untested):
+  - `yarn run build:mac`
+- build linux (untested):
+  - `yarn run build:linux`
 
 ## Special mention
 

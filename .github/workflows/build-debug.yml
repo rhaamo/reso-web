@@ -1,0 +1,34 @@
+name: Build/debug
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set Node.js 24.x
+        uses: actions/setup-node@v3
+        with:
+          node-version: 24.x
+
+      - name: Run install
+        uses: borales/actions-yarn@v4
+        with:
+          cmd: install
+
+      - name: Run build
+        uses: borales/actions-yarn@v4
+        with:
+          cmd: build:win
+
+      - name: Archive artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: debug-build
+          path: |
+            release/*/resoweb*_64.exe
+            release/*/resoweb*_64.zip
