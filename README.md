@@ -15,7 +15,6 @@ This is an Electron/VueJS app to chat and manage inventory and whatnot for reson
   - [x] Receive them
   - [x] Realtime updates
   - [ ] Handle non-Text messages
-  - [ ] Realtime notifications
   - [ ] Change own status
 - Sessions
   - [x] List with details
@@ -29,9 +28,21 @@ This is an Electron/VueJS app to chat and manage inventory and whatnot for reson
   - [ ] Download asset
   - [ ] Upload asset
 - Worlds
+
   - [ ] Basic listing
   - [ ] Filtering
   - [ ] Pagination
+
+- TODO
+  - [ ] Move more stuff into store/hub
+  - [ ] Create a store/hubChats to handle chat standalone
+  - [ ] Create a store/hubSessions to handle sessions standalone
+  - [ ] Dropdown in navbar to change user status
+  - [ ] Notifications (toast & native)
+  - User settings
+    - [ ] Notifications native
+    - [ ] Notifications toast
+    - [ ] Default Online Status
 
 ## Build or something
 
