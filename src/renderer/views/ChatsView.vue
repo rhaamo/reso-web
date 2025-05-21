@@ -110,7 +110,6 @@ import logger from '@/renderer/logging'
 import { useUserStore } from '@/renderer/stores/user'
 import { useHubStore } from '@/renderer/stores/hub'
 import resoniteApiClient from '@/renderer/resonite-api/client'
-import { v4 as uuidv4 } from 'uuid'
 
 // TODO: contacts filtering by status, if I manage to get status :')
 
@@ -175,26 +174,28 @@ export default {
         })
 
         // Send my own status update
+        // This should be moved into the navbar on the right with a dropdown for the status
         let curDate = new Date()
         let ourStatus = [
           {
             userId: this.userStore.userId, // ourself
             onlineStatus: 'Online', // Online
-            lastStatusChange: curDate.toISOString(),
+            outputDevice: 'Unknown',
+            sessionType: 'ChatClient', // Chat Client
+            userSessionId: this.userStore.userSessionId,
             isPresent: true,
             lastPresenceTimestamp: curDate.toISOString(),
-            userSessionId: uuidv4(),
-            currentSessionIndex: -1,
-            sessions: [],
-            appVersion: '0.0.0 beta of reso-web',
-            outputDevice: 'Unknown',
-            isMobile: false,
+            lastStatusChange: curDate.toISOString(),
+            // currentSessionIndex: -1,
+            // sessions: [],
             compatibilityHash: resoniteApiClient.COMPAT,
-            sessionType: 'ChatClient' // Chat Client
+            appVersion: '0.0.0 beta of reso-web',
+            isMobile: false
           },
           {
-            group: 1, // idk
-            targetIds: null // either
+            // 0 Public, 1 AllContacts, SpecificContacts, BroadcastKey, ConnectionIds
+            group: 0, // AllContacts
+            targetIds: null // no targets when 0 and 1
           }
         ]
         // TODO Timer to resend periodically

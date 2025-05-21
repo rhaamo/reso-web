@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import resoniteApiClient from '@/renderer/resonite-api/client'
 import logger from '@/renderer/logging'
 import { useHubStore } from '@/renderer/stores/hub'
+import { v4 as uuidv4 } from 'uuid'
 
 export const useUserStore = defineStore('user', {
   persist: true,
@@ -9,7 +10,8 @@ export const useUserStore = defineStore('user', {
     token: null,
     tokenExpiry: null,
     userId: null,
-    loggedIn: false
+    loggedIn: false,
+    userSessionId: null
   }),
   getters: {
     isLoggedIn() {
@@ -19,6 +21,10 @@ export const useUserStore = defineStore('user', {
         return false
       }
       if (this.token && this.tokenExpiry && this.userId && this.loggedIn) {
+        // Check if we do have an userSessionId
+        if (!this.userSessionId) {
+          this.userSessionId = uuidv4()
+        }
         return true
       }
       // well, it's not
@@ -34,6 +40,7 @@ export const useUserStore = defineStore('user', {
       this.tokenExpiry = null
       this.userId = null
       this.loggedIn = false
+      this.userSessionId = null
     },
     async login(username, password, totp) {
       await resoniteApiClient
@@ -44,6 +51,7 @@ export const useUserStore = defineStore('user', {
           this.tokenExpiry = new Date(result.data.entity.expire)
           this.userId = result.data.entity.userId
           this.loggedIn = true
+          this.userSessionId = uuidv4()
           const hubStore = useHubStore()
 
           hubStore.initHubConnection()
