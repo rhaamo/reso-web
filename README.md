@@ -5,7 +5,7 @@ This is an Electron/VueJS app to chat and manage inventory and whatnot for reson
 <p float="left">
 <img src="./screenshot1.png" height="300px"/>
 <img src="./screenshot2.png" height="300px"/>
-<img src="./screenshot3.png" height="300px"/>
+<img src="./screenshot3.png" height="200px"/>
 </p>
 
 ## Features
