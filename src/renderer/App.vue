@@ -1,6 +1,9 @@
 <template>
   <BNavbar v-b-color-mode="'dark'" toggleable="lg" variant="secondary">
-    <BNavbarBrand :to="{ name: 'chats' }">ResoWeb</BNavbarBrand>
+    <BNavbarBrand :to="{ name: 'chats' }">
+      <BImg src="/images/logo-512.png" width="30px"></BImg>
+      &nbsp;ResoWeb
+    </BNavbarBrand>
     <BNavbarToggle target="nav-collapse" />
     <BCollapse id="nav-collapse" is-nav>
       <BNavbarNav>

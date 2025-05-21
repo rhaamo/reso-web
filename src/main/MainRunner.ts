@@ -8,13 +8,14 @@ import {
 import Constants, { TrayOptions } from './utils/Constants'
 import IPCs from './IPCs'
 import { createTray, hideWindow, showWindow } from './tray'
+import { join } from 'path'
 
 const options = {
   width: Constants.IS_DEV_ENV ? 1800 : 1500,
   height: 1000,
   tray: {
     // all optional values from DEFAULT_TRAY_OPTIONS can de defined here
-    enabled: false,
+    enabled: true,
     menu: false, // true, to use a tray menu ; false to toggle visibility on click on tray icon
     trayWindow: false // true, to use a tray floating window attached to top try icon
   }
@@ -66,7 +67,8 @@ export const createMainWindow = async (): Promise<BrowserWindow> => {
       webPreferences: {
         ...Constants.DEFAULT_WEB_PREFERENCES,
         backgroundThrottling: false
-      }
+      },
+      icon: join(Constants.PUBLIC_PATH, 'images/logo-512.png')
     }
   }
   const mainWindow = new BrowserWindow(opt)
