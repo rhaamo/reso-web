@@ -40,7 +40,7 @@
                       <i class="ri-question-mark"></i> Request sent
                     </p>
                     <p class="mb-1" v-if="contact.isAccepted">
-                      <i class="ri-circle-fill"></i>
+                      <i :class="`ri-circle-fill text-${statusColor(contact.onlineStatus)}`"></i>
                       {{ contact.onlineStatus || 'Offline' }}
                     </p>
                   </div>
@@ -228,6 +228,18 @@ export default {
         this.selectedContact = contact
         this.goToBottomOfMessages()
       })
+    },
+    statusColor(status) {
+      switch (status) {
+        case 'Online':
+          return 'success'
+        case 'Sociable':
+          return 'primary'
+        case 'Busy':
+          return 'warning'
+        default:
+          return 'muted'
+      }
     }
   }
 }
