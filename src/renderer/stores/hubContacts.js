@@ -141,16 +141,19 @@ export const useHubContactsStore = defineStore('hubContacts', {
           userStore.lastStatus = status
         })
     },
-    async requestStatus() {
+    async requestStatus(userId = null) {
       const hubStore = useHubStore()
       await hubStore.connection
-        .invoke('RequestStatus', null, false)
+        .invoke('RequestStatus', userId, false)
         .catch(async (error) => {
-          logger.default.error('RequestStatus null,false err', error)
+          logger.default.error(`RequestStatus ${userId},false err`, error)
         })
         .then((res) => {
-          logger.default.info('RequestStatus null,false success', res)
+          logger.default.info(`RequestStatus ${userId},false success`, res)
         })
+    },
+    async requestStatues() {
+      this.contacts.forEach(async (el) => await this.requestStatus(el.id || el.userId || null))
     }
   }
 })

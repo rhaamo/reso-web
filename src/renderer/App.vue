@@ -119,7 +119,10 @@ export default {
           // Register handlers for status updates, broadcast status, etc.
           this.hubContactsStore.registerHandlers().then(() => {
             // Broadcast our initial status using last manually set status
-            this.hubContactsStore.broadcastStatus(this.userStore.lastStatus)
+            this.hubContactsStore.broadcastStatus(this.userStore.lastStatus).then(() => {
+              // Request statues from contacts (doesn't work ?)
+              this.hubContactsStore.requestStatues()
+            })
           })
         })
       })
