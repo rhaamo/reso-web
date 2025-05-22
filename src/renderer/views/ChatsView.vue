@@ -63,8 +63,7 @@
                     <BCol cols="6"></BCol>
                     <BCol cols="6">
                       <BCard class="msgOurs">
-                        <template v-if="msg.messageType == 'Text'">{{ msg.content }}</template>
-                        <template v-else>Unhandled message type</template>
+                        <ChatMessage :msg="msg"></ChatMessage>
                         <template #footer>
                           <span class="float-end">
                             <template v-if="!msg.readTime">
@@ -80,8 +79,7 @@
                   <BRow v-else>
                     <BCol cols="6">
                       <BCard class="msgTheirs">
-                        <template v-if="msg.messageType == 'Text'">{{ msg.content }}</template>
-                        <template v-else>Unhandled message type</template>
+                        <ChatMessage :msg="msg"></ChatMessage>
                         <template #footer>
                           <span class="float-end">
                             <template v-if="!msg.readTime">
@@ -135,6 +133,7 @@ import { useHubContactsStore } from '@/renderer/stores/hubContacts'
 import resoniteApiClient from '@/renderer/resonite-api/client'
 import { mapState } from 'pinia'
 import { useToastController } from 'bootstrap-vue-next'
+import ChatMessage from '@/renderer/components/ChatMessage'
 
 // TODO: contacts filtering by status, if I manage to get status :')
 
@@ -145,6 +144,9 @@ export default {
     toasty: useToastController(),
     hubContactStore: useHubContactsStore()
   }),
+  components: {
+    ChatMessage
+  },
   data: () => ({
     selectedContact: null,
     inputMessage: ''
