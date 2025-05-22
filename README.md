@@ -16,7 +16,7 @@ This is an Electron/VueJS app to chat and manage inventory and whatnot for reson
   - [x] Receive them
   - [x] Realtime updates
   - [ ] Handle non-Text messages
-  - [ ] Change own status
+  - [?] Change own status (To be tested)
   - [ ] Show in which session the user is active
 - Sessions
   - [x] List with details
@@ -38,13 +38,11 @@ This is an Electron/VueJS app to chat and manage inventory and whatnot for reson
 - TODO
   - [ ] Move more stuff into store/hub
   - [ ] Create a store/hubSessions to handle sessions standalone
-  - [ ] Dropdown in navbar to change user status
   - [ ] Notifications (toast & native)
   - [ ] Mark messages as read
   - User settings
     - [ ] Notifications native
     - [ ] Notifications toast
-    - [ ] Default Online Status
 
 ## Build or something
 

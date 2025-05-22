@@ -85,6 +85,8 @@ export const useHubContactsStore = defineStore('hubContacts', {
     },
     async broadcastStatus(status = 'Online') {
       const userStore = useUserStore()
+      const hubStore = useHubStore()
+
       let curDate = new Date(Date.now()).toISOString()
       let ourStatus = [
         {
@@ -123,17 +125,20 @@ export const useHubContactsStore = defineStore('hubContacts', {
         }
       ]
 
-      await this.hubStore.connection
+      await hubStore.connection
         .invoke('BroadcastStatus', ...ourStatus)
         .catch(async (error) => {
           logger.default.error('broadcastStatus error', error)
         })
         .then(async (res) => {
           logger.default.info('We have broadcasted our status', status, res)
+          this.ourStatus = status
+          userStore.lastStatus = status
         })
     },
     async requestStatus() {
-      await this.hubStore.connection
+      const hubStore = useHubStore()
+      await hubStore.connection
         .invoke('RequestStatus', null, false)
         .catch(async (error) => {
           logger.default.error('RequestStatus null,false err', error)

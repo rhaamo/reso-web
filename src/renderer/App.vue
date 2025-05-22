@@ -25,16 +25,16 @@
           <template #button-content>
             <i :class="`ri-circle-fill text-${statusColor}`"></i> {{ ourStatus || 'Unknown' }}
           </template>
-          <BDropdownItem @click.prevent="">
+          <BDropdownItem @click.prevent="changeStatus('Sociable')">
             <i class="ri-circle-fill text-primary"></i> Sociable
           </BDropdownItem>
-          <BDropdownItem @click.prevent="">
+          <BDropdownItem @click.prevent="changeStatus('Online')">
             <i class="ri-circle-fill text-success"></i> Online
           </BDropdownItem>
-          <BDropdownItem @click.prevent="">
+          <BDropdownItem @click.prevent="changeStatus('Busy')">
             <i class="ri-circle-fill text-warning"></i> Busy
           </BDropdownItem>
-          <BDropdownItem @click.prevent="">
+          <BDropdownItem @click.prevent="changeStatus('Offline')">
             <i class="ri-circle-fill text-muted"></i> Offline
           </BDropdownItem>
           <BDropdownDivider />
@@ -112,11 +112,22 @@ export default {
         variant: 'success'
       })
 
+      // Init SignalR HUB Connection
       this.hubStore.initHubConnection().then(() => {
+        // Fetch initial contact list
         this.hubContactsStore.fetchInitialContacts().then(() => {
-          this.hubContactsStore.registerHandlers()
+          // Register handlers for status updates, broadcast status, etc.
+          this.hubContactsStore.registerHandlers().then(() => {
+            // Broadcast our initial status using last manually set status
+            this.hubContactsStore.broadcastStatus(this.userStore.lastStatus)
+          })
         })
       })
+    }
+  },
+  methods: {
+    changeStatus(status) {
+      this.hubContactsStore.broadcastStatus(status)
     }
   }
 }

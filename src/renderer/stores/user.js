@@ -11,7 +11,8 @@ export const useUserStore = defineStore('user', {
     tokenExpiry: null,
     userId: null,
     loggedIn: false,
-    userSessionId: null
+    userSessionId: null,
+    lastStatus: 'Online'
   }),
   getters: {
     isLoggedIn() {
