@@ -111,7 +111,7 @@ export default {
         .then((result) => {
           // we have logged in yippeee
           logger.default.info('Login success', result)
-          this.$router.push({ name: 'chats' })
+          this.$router.push({ name: 'home' })
         })
         .catch((error) => {
           logger.default.error('Login failed', error)

@@ -131,142 +131,43 @@
 import logger from '@/renderer/logging'
 import { useUserStore } from '@/renderer/stores/user'
 import { useHubStore } from '@/renderer/stores/hub'
+import { useHubContactsStore } from '@/renderer/stores/hubContacts'
 import resoniteApiClient from '@/renderer/resonite-api/client'
-// import { ref } from 'vue'
+import { mapState } from 'pinia'
+import { useToastController } from 'bootstrap-vue-next'
 
 // TODO: contacts filtering by status, if I manage to get status :')
 
 export default {
   setup: () => ({
     userStore: useUserStore(),
-    hubStore: useHubStore()
+    hubStore: useHubStore(),
+    toasty: useToastController()
   }),
   data: () => ({
-    contacts: [],
     selectedContact: '',
-    selectedContactMessages: [],
     inputMessage: ''
   }),
-  created() {
-    logger.default.info('Chats: check for login...')
-
-    // Check if we are logged in, if not, redirect to login page
-    if (!this.userStore.isLoggedIn) {
-      logger.default.info('not logged in, redirecting...')
-      this.$router.push({
-        name: 'login'
-      })
-    } else {
-      logger.default.info('we are')
-    }
-    // this.fetchUsers()
+  computed: {
+    ...mapState(useHubContactsStore, {
+      contacts: (store) => {
+        return store.contacts
+      },
+      contactsMessages: (store) => {
+        return store.contactsMessages
+      }
+    })
   },
-  beforeUnmount() {
-    // Remove the handlers
-    this.hubStore.connection.off('ReceiveStatusUpdate', this.contactStatusUpdate)
-    this.hubStore.connection.off('MessageSent', this.updateMessages)
-    this.hubStore.connection.off('ReceiveMessage', this.updateMessages)
-  },
+  created() {},
+  beforeUnmount() {},
   mounted() {
     this.$nextTick(() => {
       this.hubStore.initHubConnection().then(async () => {
-        // First do a call for InitializeContact, which should returns your contact list
-        await this.hubStore.connection.stream('InitializeContacts').subscribe({
-          next: (item) => {
-            this.contactStatusUpdate(item)
-          },
-          complete: () => {},
-          error: (err) => {
-            console.log('Error while doing a ReceiveStatusUpdate', err)
-          }
-        })
-
-        // Then register a handler to get status updates
-        this.hubStore.connection.on('ReceiveStatusUpdate', this.contactStatusUpdate)
-        // And one for messages sent
-        this.hubStore.connection.on('MessageSent', this.updateMessages)
-        // And received
-        this.hubStore.connection.on('ReceiveMessage', this.updateMessages)
-
-        // Then a RequestStatus, with null and false as arguments
-        // TODO Migrate that to a function located in hubStore
-        await this.hubStore.connection
-          .invoke('RequestStatus', null, false)
-          .catch(async (error) => {
-            logger.default.error('RequestStatus null,false err', error)
-          })
-          .then((res) => {
-            logger.default.info('RequestStatus null,false success', res)
-          })
-
-        // Send my own status update
-        // This should be moved into the navbar on the right with a dropdown for the status
-        let curDate = new Date(Date.now()).toISOString()
-        let ourStatus = [
-          {
-            userId: this.userStore.userId, // ourself
-            userSessionId: this.userStore.userSessionId,
-            sessionType: 'ChatClient', // Chat Client
-            outputDevice: 'Unknown',
-            isMobile: false,
-            onlineStatus: 'Online', // Online
-            isPresent: true,
-            lastPresenceTimestamp: curDate,
-            lastStatusChange: curDate,
-            // hashSalt: '???', // Probably linked to the RSA key ?
-            appVersion: '1.0.0 beta of reso-web',
-            compatibilityHash: resoniteApiClient.COMPAT,
-            // See hubSendTextMessage in store/hub.js for more infos about that RSA key
-            // publicRSAKey: {
-            //   Exponent: 'xxx',
-            //   Modulus: 'xxx',
-            //   P: null,
-            //   Q: null,
-            //   DP: null,
-            //   DQ: null,
-            //   InverseQ: null,
-            //   D: null
-            // },
-            // I guess if there is no session, it would be -1 ?
-            // Resonite did connect to my home and has a session filled then... (and sessionIndex 1, not 0)
-            currentSessionIndex: -1,
-            sessions: []
-          },
-          {
-            // 0 Public, 1 AllContacts, SpecificContacts, BroadcastKey, ConnectionIds
-            group: 0, // AllContacts
-            targetIds: null // no targets when 0 and 1
-          }
-        ]
-        // TODO Timer to resend periodically
-        // TODO Migrate that to a function located in hubStore
-        await this.hubStore.connection
-          .invoke('BroadcastStatus', ...ourStatus)
-          .catch(async (error) => {
-            logger.default.error('BroadcastStatus err', error)
-          })
-          .then(async (res) => {
-            logger.default.info('BroadcastStatus success', res)
-          })
-        logger.default.info('ourStatus', ourStatus)
+        // do things
       })
     })
   },
   methods: {
-    contactStatusUpdate(statusUpdate) {
-      logger.default.info('contactStatusUpdate', statusUpdate)
-      let contactIdx = this.contacts.findIndex((el) => el.id === statusUpdate.userId)
-      if (contactIdx && contactIdx >= 0) {
-        console.log('contact idx', contactIdx)
-        // Merge the contact with the status update
-        logger.default.info(`User ${statusUpdate.id} already exist, merging status`)
-        this.contacts[contactIdx] = Object.assign(this.contacts[contactIdx], statusUpdate)
-      } else {
-        // Create a new user
-        logger.default.info(`User ${statusUpdate.id} didn't exist`)
-        this.contacts.push(statusUpdate)
-      }
-    },
     resDbToAsset(resdb) {
       if (resdb) {
         return resoniteApiClient.getAssetsDomainUrl(resdb)
@@ -277,20 +178,6 @@ export default {
     getMsgTime(date) {
       let d = new Date(date)
       return `${d.getHours()}:${d.getMinutes()}`
-    },
-    loadMessages(user) {
-      logger.default.info(`We want to chat with ${user.id} (${user.contactUsername})`)
-      this.selectedContact = user
-      this.selectedContactMessages = []
-      resoniteApiClient
-        .getUserMessages(this.userStore.userId, this.userStore.token, user.id, null)
-        .then((response) => {
-          // Reverse to have latest message at the bottom
-          this.selectedContactMessages = response.data.reverse()
-
-          // Then scroll to bottom of messages
-          this.goToBottomOfMessages()
-        })
     },
     goToBottomOfMessages() {
       this.$nextTick(() => {
@@ -312,12 +199,6 @@ export default {
           logger.default.error('Cannot send message', error)
           // TODO error handling
         })
-    },
-    updateMessages(message) {
-      logger.default.info('A message has been sent:', message)
-      this.selectedContactMessages.push(message)
-      // Then scroll to bottom of messages
-      this.goToBottomOfMessages()
     }
   }
 }

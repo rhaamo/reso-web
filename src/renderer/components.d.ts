@@ -38,8 +38,15 @@ declare module 'vue' {
     BNavItem: typeof import('bootstrap-vue-next/components/BNav')['BNavItem']
     BNavItemDropdown: typeof import('bootstrap-vue-next/components/BNav')['BNavItemDropdown']
     BRow: typeof import('bootstrap-vue-next/components/BContainer')['BRow']
+    BToastOrchestrator: typeof import('bootstrap-vue-next/components/BToast')['BToastOrchestrator']
+    ConfirmDialog: typeof import('primevue/confirmdialog')['default']
+    ConfirmPopup: typeof import('primevue/confirmpopup')['default']
+    DynamicDialog: typeof import('primevue/dynamicdialog')['default']
+    Image: typeof import('primevue/image')['default']
+    Menubar: typeof import('primevue/menubar')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    Toast: typeof import('primevue/toast')['default']
   }
   export interface ComponentCustomProperties {
     vBColorMode: typeof import('bootstrap-vue-next/directives/BColorMode')['vBColorMode']

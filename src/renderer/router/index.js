@@ -6,12 +6,18 @@ import LogoutView from '@/renderer/views/LogoutView.vue'
 import SessionsView from '@/renderer/views/SessionsView.vue'
 import InventoryView from '@/renderer/views/InventoryView.vue'
 import WorldsView from '@/renderer/views/WorldsView.vue'
+import UserView from '@/renderer/views/UserView.vue'
 
 const router = createRouter({
   history: createWebHashHistory(),
   routes: [
     {
       path: '/',
+      name: 'home',
+      component: UserView
+    },
+    {
+      path: '/chats',
       name: 'chats',
       component: ChatsView
     },
