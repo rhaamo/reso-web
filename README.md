@@ -38,11 +38,8 @@ This is an Electron/VueJS app to chat and manage inventory and whatnot for reson
 - TODO
   - [ ] Move more stuff into store/hub
   - [ ] Create a store/hubSessions to handle sessions standalone
-  - [ ] Notifications (toast & native)
+  - [ ] Notifications (native)
   - [ ] Mark messages as read
-  - User settings
-    - [ ] Notifications native
-    - [ ] Notifications toast
 
 ## Build or something
 

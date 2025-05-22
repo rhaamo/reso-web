@@ -12,7 +12,11 @@ export const useUserStore = defineStore('user', {
     userId: null,
     loggedIn: false,
     userSessionId: null,
-    lastStatus: 'Online'
+    lastStatus: 'Online',
+    settings: {
+      nativeNotifications: false,
+      toastNotifications: true
+    }
   }),
   getters: {
     isLoggedIn() {

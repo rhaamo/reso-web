@@ -162,7 +162,17 @@ export default {
       }
     })
   },
-  created() {},
+  created() {
+    // Check if we are logged in, if not, redirect to login page
+    if (!this.userStore.isLoggedIn) {
+      logger.default.info('Logged in status: nope, redirecting to login page')
+      this.$router.push({
+        name: 'login'
+      })
+    } else {
+      logger.default.info('Logged in status: we are good')
+    }
+  },
   beforeUnmount() {},
   mounted() {},
   watch: {
