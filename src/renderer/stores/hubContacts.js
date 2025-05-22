@@ -51,14 +51,19 @@ export const useHubContactsStore = defineStore('hubContacts', {
     },
     contactStatusUpdate(statusUpdate) {
       logger.default.info('We need to handle a status update:', statusUpdate)
-      let contactIdx = this.contacts.findIndex((el) => el.id === statusUpdate.userId)
-      if (contactIdx && contactIdx >= 0) {
+      let userId = statusUpdate.id || statusUpdate.userId
+      let contactIdx = this.contacts.findIndex((el) => el.id === userId || el.userId === userId)
+      if (contactIdx >= 0) {
         // Merge the contact with the status update
-        logger.default.info(`User ${statusUpdate.id} already exist, merging status`)
+        logger.default.info(
+          `User id:${statusUpdate.id}/userId:${statusUpdate.userId} already exist, merging status`
+        )
         this.contacts[contactIdx] = Object.assign(this.contacts[contactIdx], statusUpdate)
       } else {
         // Create a new user
-        logger.default.info(`User ${statusUpdate.id} didn't exist, creating`)
+        logger.default.info(
+          `User id:${statusUpdate.id}/userId:${statusUpdate.userId} didn't exist, creating`
+        )
         this.contacts.push(statusUpdate)
       }
     },
