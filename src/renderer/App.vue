@@ -1,14 +1,15 @@
 <template>
   <BToastOrchestrator />
 
-  <BNavbar v-b-color-mode="'dark'" toggleable="lg" variant="secondary">
-    <BNavbarBrand :to="{ name: 'chats' }">
+  <BNavbar v-b-color-mode="'dark'" toggleable="lg" variant="dark">
+    <BNavbarBrand :to="{ name: 'home' }">
       <BImg src="/images/logo-512.png" width="30px"></BImg>
       &nbsp;ResoWeb
     </BNavbarBrand>
     <BNavbarToggle target="nav-collapse" />
     <BCollapse id="nav-collapse" is-nav>
       <BNavbarNav>
+        <BNavItem :to="{ name: 'home' }"><i class="ri-home-heart-line"></i> Home</BNavItem>
         <BNavItem :to="{ name: 'chats' }"><i class="ri-message-2-line"></i> Chats</BNavItem>
         <BNavItem :to="{ name: 'sessions' }"
           ><i class="ri-user-community-line"></i> Sessions</BNavItem
@@ -22,9 +23,23 @@
         <BNavItemDropdown>
           <!-- Using 'button-content' slot -->
           <template #button-content>
-            <em>User</em>
+            <i :class="`ri-circle-fill text-${statusColor}`"></i> {{ ourStatus || 'Unknown' }}
           </template>
-          <BDropdownItem href="#">Profile</BDropdownItem>
+          <BDropdownItem @click.prevent="">
+            <i class="ri-circle-fill text-primary"></i> Sociable
+          </BDropdownItem>
+          <BDropdownItem @click.prevent="">
+            <i class="ri-circle-fill text-success"></i> Online
+          </BDropdownItem>
+          <BDropdownItem @click.prevent="">
+            <i class="ri-circle-fill text-warning"></i> Busy
+          </BDropdownItem>
+          <BDropdownItem @click.prevent="">
+            <i class="ri-circle-fill text-muted"></i> Offline
+          </BDropdownItem>
+          <BDropdownDivider />
+          <BDropdownItem :to="{ name: 'settings' }">Settings</BDropdownItem>
+          <BDropdownDivider />
           <BDropdownItem :to="{ name: 'logout' }">Sign Out</BDropdownItem>
         </BNavItemDropdown>
       </BNavbarNav>
@@ -42,6 +57,7 @@ import { useUserStore } from '@/renderer/stores/user'
 import { useHubStore } from '@/renderer/stores/hub'
 import { useHubContactsStore } from '@/renderer/stores/hubContacts'
 import { useToastController } from 'bootstrap-vue-next'
+import { mapState } from 'pinia'
 
 export default {
   setup: () => ({
@@ -52,6 +68,25 @@ export default {
   }),
   data() {
     return {}
+  },
+  computed: {
+    ...mapState(useHubContactsStore, {
+      ourStatus(store) {
+        return store.ourStatus
+      }
+    }),
+    statusColor() {
+      switch (this.ourStatus) {
+        case 'Online':
+          return 'success'
+        case 'Sociable':
+          return 'primary'
+        case 'Busy':
+          return 'warning'
+        default:
+          return 'muted'
+      }
+    }
   },
   created() {
     logger.default.info('App init...')

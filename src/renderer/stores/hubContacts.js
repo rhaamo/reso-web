@@ -50,6 +50,7 @@ export const useHubContactsStore = defineStore('hubContacts', {
       logger.default.info('Unregistered various handlers')
     },
     contactStatusUpdate(statusUpdate) {
+      logger.default.info('We need to handle a status update:', statusUpdate)
       let contactIdx = this.contacts.findIndex((el) => el.id === statusUpdate.userId)
       if (contactIdx && contactIdx >= 0) {
         // Merge the contact with the status update
