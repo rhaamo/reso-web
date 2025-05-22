@@ -1,75 +1,57 @@
 <template>
-  <ConfirmPopup></ConfirmPopup>
-  <ConfirmDialog group="dialog"></ConfirmDialog>
-  <Toast />
-  <DynamicDialog />
+  <BToastOrchestrator />
 
-  <Menubar :model="menuBarItems">
-    <template #start>
-      <Image src="/images/logo-512.png" alt="ResoWEB Logo" width="30px" />
-    </template>
-  </Menubar>
+  <BNavbar v-b-color-mode="'dark'" toggleable="lg" variant="secondary">
+    <BNavbarBrand :to="{ name: 'chats' }">
+      <BImg src="/images/logo-512.png" width="30px"></BImg>
+      &nbsp;ResoWeb
+    </BNavbarBrand>
+    <BNavbarToggle target="nav-collapse" />
+    <BCollapse id="nav-collapse" is-nav>
+      <BNavbarNav>
+        <BNavItem :to="{ name: 'chats' }"><i class="ri-message-2-line"></i> Chats</BNavItem>
+        <BNavItem :to="{ name: 'sessions' }"
+          ><i class="ri-user-community-line"></i> Sessions</BNavItem
+        >
+        <BNavItem :to="{ name: 'inventory' }"><i class="ri-folders-line"></i> Inventory</BNavItem>
+        <BNavItem :to="{ name: 'worlds' }"><i class="ri-global-line"></i> Worlds</BNavItem>
+        <BNavItem :to="{ name: 'about' }"><i class="ri-question-mark"></i> About</BNavItem>
+      </BNavbarNav>
+      <!-- Right aligned nav items -->
+      <BNavbarNav class="ms-auto mb-2 mb-lg-0">
+        <BNavItemDropdown>
+          <!-- Using 'button-content' slot -->
+          <template #button-content>
+            <em>User</em>
+          </template>
+          <BDropdownItem href="#">Profile</BDropdownItem>
+          <BDropdownItem :to="{ name: 'logout' }">Sign Out</BDropdownItem>
+        </BNavItemDropdown>
+      </BNavbarNav>
+    </BCollapse>
+  </BNavbar>
 
   <RouterView />
 </template>
 
+<style lang="scss" src="./App.scss"></style>
+
 <script>
 import logger from '@/renderer/logging'
 import { useUserStore } from '@/renderer/stores/user'
-import { useToast } from 'primevue/usetoast'
+import { useHubStore } from '@/renderer/stores/hub'
+import { useHubContactsStore } from '@/renderer/stores/hubContacts'
+import { useToastController } from 'bootstrap-vue-next'
 
 export default {
   setup: () => ({
     userStore: useUserStore(),
-    toast: useToast()
+    hubStore: useHubStore(),
+    hubContactsStore: useHubContactsStore(),
+    toasty: useToastController()
   }),
   data() {
-    return {
-      menuBarItems: [
-        {
-          label: 'Home',
-          icon: 'ri-home-heart-line',
-          command: () => {
-            this.$router.push({ name: 'home' })
-          }
-        },
-        {
-          label: 'Chats',
-          icon: 'ri-message-2-line',
-          command: () => {
-            this.$router.push({ name: 'chats' })
-          }
-        },
-        {
-          label: 'Sessions',
-          icon: 'ri-user-community-line',
-          command: () => {
-            this.$router.push({ name: 'sessions' })
-          }
-        },
-        {
-          label: 'Inventory',
-          icon: 'ri-folders-line',
-          command: () => {
-            this.$router.push({ name: 'inventory' })
-          }
-        },
-        {
-          label: 'Worlds',
-          icon: 'ri-global-line',
-          command: () => {
-            this.$router.push({ name: 'worlds' })
-          }
-        },
-        {
-          label: 'About',
-          icon: 'ri-question-mark',
-          command: () => {
-            this.$router.push({ name: 'about' })
-          }
-        }
-      ]
-    }
+    return {}
   },
   created() {
     logger.default.info('App init...')
@@ -77,22 +59,28 @@ export default {
     // Check if we are logged in, if not, redirect to login page
     if (!this.userStore.isLoggedIn) {
       logger.default.info('Logged in status: nope, redirecting to login page')
-      this.toast.add({
-        severity: 'danger',
-        life: 2000,
-        summary: 'Authentication',
-        detail: 'Whoopsie, we need to login first!'
+      this.toasty.create({
+        title: 'Authentication',
+        body: 'Whoopsie, we need to login first!',
+        modelValue: 3000,
+        variant: 'danger'
       })
       this.$router.push({
         name: 'login'
       })
     } else {
       logger.default.info('Logged in status: we are good')
-      this.toast.add({
-        severity: 'success',
-        life: 20000,
-        summary: 'Authentication',
-        detail: 'We are good to go!'
+      this.toasty.create({
+        title: 'Authentication',
+        body: 'We are good to go!',
+        modelValue: 3000,
+        variant: 'success'
+      })
+
+      this.hubStore.initHubConnection().then(() => {
+        this.hubContactsStore.fetchInitialContacts().then(() => {
+          this.hubContactsStore.registerHandlers()
+        })
       })
     }
   }

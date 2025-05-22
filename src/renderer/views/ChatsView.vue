@@ -5,11 +5,11 @@
         <BCol cols="4">
           <BListGroup>
             <BListGroupItem
-              :active="selectedContact.id == contact.id"
+              :active="selectedContact?.id == contact.id"
               :href="`#${contact.id}`"
               v-for="contact in contacts"
               :key="contact.id"
-              @click.prevent="loadMessages(contact)"
+              @click.prevent="showMessages(contact)"
             >
               <BRow>
                 <BCol cols="4">
@@ -142,30 +142,34 @@ export default {
   setup: () => ({
     userStore: useUserStore(),
     hubStore: useHubStore(),
-    toasty: useToastController()
+    toasty: useToastController(),
+    hubContactStore: useHubContactsStore()
   }),
   data: () => ({
-    selectedContact: '',
+    selectedContact: null,
     inputMessage: ''
   }),
   computed: {
     ...mapState(useHubContactsStore, {
-      contacts: (store) => {
+      contacts(store) {
         return store.contacts
       },
-      contactsMessages: (store) => {
-        return store.contactsMessages
+      selectedContactMessages(store) {
+        if (!this.selectedContact) {
+          return []
+        }
+        return store.contactsMessages[this.selectedContact.id]
       }
     })
   },
   created() {},
   beforeUnmount() {},
-  mounted() {
-    this.$nextTick(() => {
-      this.hubStore.initHubConnection().then(async () => {
-        // do things
-      })
-    })
+  mounted() {},
+  watch: {
+    selectedContactMessages: function () {
+      // TODO FIXME doesn't always trigger :(
+      this.goToBottomOfMessages()
+    }
   },
   methods: {
     resDbToAsset(resdb) {
@@ -194,11 +198,24 @@ export default {
         .then(() => {
           // clear input
           this.inputMessage = ''
+          this.goToBottomOfMessages()
         })
         .catch((error) => {
           logger.default.error('Cannot send message', error)
-          // TODO error handling
+          this.toasty.create({
+            title: 'Sending message',
+            body: `Failed to send message :( (${error})`,
+            modelValue: 3000,
+            variant: 'danger'
+          })
         })
+    },
+    showMessages(contact) {
+      logger.default.info(`Selected ${contact.id} for chat`, contact)
+      this.hubContactStore.fetchUserMessages(contact).then(() => {
+        this.selectedContact = contact
+        this.goToBottomOfMessages()
+      })
     }
   }
 }

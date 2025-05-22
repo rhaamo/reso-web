@@ -9,7 +9,8 @@ export const useHubContactsStore = defineStore('hubContacts', {
   state: () => ({
     contacts: [],
     contactsMessages: {},
-    ourStatus: 'Online'
+    ourStatus: 'Online',
+    statusInterval: null
   }),
   getters: {},
   actions: {
@@ -20,6 +21,7 @@ export const useHubContactsStore = defineStore('hubContacts', {
     },
     async fetchInitialContacts() {
       const hubStore = useHubStore()
+      this.contacts = [] // first reset contacts list before adding them
       await hubStore.connection.stream('InitializeContacts').subscribe({
         next: (item) => {
           this.contactStatusUpdate(item)
@@ -33,14 +35,19 @@ export const useHubContactsStore = defineStore('hubContacts', {
     async registerHandlers() {
       const hubStore = useHubStore()
       hubStore.connection.on('ReceiveStatusUpdate', this.contactStatusUpdate)
-      hubStore.connection.on('MessageSent', this.updateMessages)
-      hubStore.connection.on('ReceiveMessage', this.updateMessages)
+      hubStore.connection.on('MessageSent', this.addSentMessage)
+      hubStore.connection.on('ReceiveMessage', this.addReceivedMessage)
+      // every 150 seconds, broadcast our status
+      this.statusInterval = setInterval(this.broadcastMyStatus, 150000)
+      logger.default.info('Registered various handlers')
     },
     async deregisterHandlers() {
       const hubStore = useHubStore()
       hubStore.connection.off('ReceiveStatusUpdate', this.contactStatusUpdate)
-      hubStore.connection.off('MessageSent', this.updateMessages)
-      hubStore.connection.off('ReceiveMessage', this.updateMessages)
+      hubStore.connection.off('MessageSent', this.addSentMessage)
+      hubStore.connection.off('ReceiveMessage', this.addReceivedMessage)
+      clearInterval(this.statusInterval)
+      logger.default.info('Unregistered various handlers')
     },
     contactStatusUpdate(statusUpdate) {
       let contactIdx = this.contacts.findIndex((el) => el.id === statusUpdate.userId)
@@ -54,19 +61,26 @@ export const useHubContactsStore = defineStore('hubContacts', {
         this.contacts.push(statusUpdate)
       }
     },
-    updateMessages(message) {
-      // TODO FIXME .ownerId correct ?
+    addSentMessage(message) {
       logger.default.info('Got a message to add to the list', message)
-      this.contactsMessages[message.ownerId].push(message)
+      this.contactsMessages[message.recipientId].push(message)
+    },
+    addReceivedMessage(message) {
+      logger.default.info('Got a message to add to the list', message)
+      this.contactsMessages[message.senderId].push(message)
     },
     async fetchUserMessages(user) {
       logger.default.info('Fetching messages for', user)
+      const userStore = useUserStore()
       await resoniteApiClient
-        .getUserMessages(this.userStore.userId, this.userStore.token, user.id, null)
+        .getUserMessages(userStore.userId, userStore.token, user.id, null)
         .then((response) => {
           // Reverse to have latest message at the bottom
           this.contactsMessages[user.id] = response.data.reverse()
         })
+    },
+    async broadcastMyStatus() {
+      await this.broadcastStatus(this.ourStatus)
     },
     async broadcastStatus(status = 'Online') {
       const userStore = useUserStore()
@@ -111,10 +125,10 @@ export const useHubContactsStore = defineStore('hubContacts', {
       await this.hubStore.connection
         .invoke('BroadcastStatus', ...ourStatus)
         .catch(async (error) => {
-          logger.default.error('broadcastStatus err', error)
+          logger.default.error('broadcastStatus error', error)
         })
         .then(async (res) => {
-          logger.default.info('broadcastStatus success', res)
+          logger.default.info('We have broadcasted our status', status, res)
         })
     },
     async requestStatus() {

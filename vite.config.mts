@@ -11,7 +11,6 @@ import { resolve, dirname } from 'path'
 import { builtinModules } from 'module'
 import Components from 'unplugin-vue-components/vite'
 import { BootstrapVueNextResolver } from 'bootstrap-vue-next'
-import { PrimeVueResolver } from '@primevue/auto-import-resolver'
 import vueDevTools from 'vite-plugin-vue-devtools'
 
 const isDevEnv = process.env.NODE_ENV === 'development'
@@ -104,7 +103,7 @@ export default defineConfig(({ mode }) => {
       Vue(),
       vueDevTools(),
       Components({
-        resolvers: [BootstrapVueNextResolver(), PrimeVueResolver()]
+        resolvers: [BootstrapVueNextResolver()]
       }),
       VueJsx(),
       // Docs: https://github.com/vuetifyjs/vuetify-loader
