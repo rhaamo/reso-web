@@ -1,6 +1,6 @@
 <template>
   <BContainer class="p-5">
-    <center>
+    <div class="text-center">
       <h3>Settings</h3>
       <h5>New messages</h5>
       <div>
@@ -20,7 +20,7 @@
           Native Notifications (native to your operating-system)
         </BFormCheckbox>
       </div>
-    </center>
+    </div>
   </BContainer>
 </template>
 

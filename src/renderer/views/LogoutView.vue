@@ -1,8 +1,8 @@
 <template>
   <BContainer class="p-5">
-    <center>
+    <div class="text-center">
       <h3>Bye bye</h3>
-    </center>
+    </div>
   </BContainer>
 </template>
 

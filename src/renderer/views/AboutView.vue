@@ -1,9 +1,9 @@
 <template>
   <BContainer class="p-5">
-    <center>
+    <div class="text-center">
       <h3>ResoWeb</h3>
-      A web app blah blah.<br />
-      Source code <a href="https://github.com/rhaamo/reso-web" target="_blank">here</a>.
-    </center>
+      An Electron app for Resonite to chat, browse sessions, worlds and inventory.<br />
+      Source code is <a href="https://github.com/rhaamo/reso-web" target="_blank">here</a>.
+    </div>
   </BContainer>
 </template>

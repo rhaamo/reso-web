@@ -1,7 +1,7 @@
 <template>
   <BContainer class="p-5">
-    <center>
+    <div class="text-center">
       <h3>Not implemented yet</h3>
-    </center>
+    </div>
   </BContainer>
 </template>
