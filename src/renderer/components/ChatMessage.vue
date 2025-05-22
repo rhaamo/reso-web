@@ -40,14 +40,16 @@ export default {
     <BCard img-src="theMsg.content.thumbnailUrl" img-alt="Session Thumbnail" img-top>
       <template #header><div v-html="formatText(theMsg.content.name)"></div></template>
       <BCardText>
-        {{ formatText(theMsg.content.description) }}<br />
-        <small>Hosted by {{ theMsg.content.hostUsername }}</small>
+        {{ formatText(theMsg.content.description) }}
       </BCardText>
+      <template #footer>
+        <small>Hosted by {{ theMsg.content.hostUsername }}</small>
+      </template>
     </BCard>
   </template>
   <template v-else-if="theMsg.messageType == 'Object'">Unhandled Object message</template>
   <template v-else-if="theMsg.messageType == 'InviteRequest'"
-    >Unhandled InviteRequest message</template
+    ><i class="ri-robot-2-line"></i> Your contact requested an invite into your session.</template
   >
   <template v-else>Unhandled message type: {{ theMsg.messageType }}</template>
 </template>
