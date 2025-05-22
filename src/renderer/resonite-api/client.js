@@ -166,6 +166,14 @@ const getGroupRecordsAt = (groupId, path) => {
   return Axios.get(`${API}/groups/${groupId}/records?path=${path}`)
 }
 
+const getStorageQuota = (userId, token) => {
+  return Axios.get(`${API}/users/${userId}/storage`, {
+    headers: {
+      Authorization: `res ${userId}:${token}`
+    }
+  })
+}
+
 const resoniteApiClient = {
   API,
   MACHINEID,
@@ -183,7 +191,8 @@ const resoniteApiClient = {
   getUserRecordsAt,
   getUserRecord,
   getGroupRecordByPath,
-  getGroupRecordsAt
+  getGroupRecordsAt,
+  getStorageQuota
 }
 
 export default resoniteApiClient
