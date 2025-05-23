@@ -11,10 +11,18 @@
               label="Session name:"
               label-for="sessionFiltersSessionName"
             >
-              <BFormInput id="sessionFiltersSessionName" v-model="sessionsFilters.name" />
+              <BFormInput
+                id="sessionFiltersSessionName"
+                v-model="sessionsFilters.name"
+                placeholder="starts with, case sensitive"
+              />
             </BFormGroup>
             <BFormGroup label-cols-lg="4" label="Host name:" label-for="sessionFiltersHostName">
-              <BFormInput id="sessionFiltersHostName" v-model="sessionsFilters.hostName" />
+              <BFormInput
+                id="sessionFiltersHostName"
+                v-model="sessionsFilters.hostName"
+                placeholder="case sensitive"
+              />
             </BFormGroup>
             <BFormGroup label-cols-lg="4" label="Min users:" label-for="sessionFiltersMinUsers">
               <BFormSpinbutton
@@ -40,13 +48,6 @@
               name="filterIncludeEmptyHeadless"
             >
               Include Empty Headless
-            </BFormCheckbox>
-            <BFormCheckbox
-              id="filterIncludeIncompatible"
-              v-model="sessionsFilters.includeIncompatible"
-              name="filterIncludeIncompatible"
-            >
-              Include Incompatible
             </BFormCheckbox>
           </BCol>
 

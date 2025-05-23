@@ -26,7 +26,6 @@ export const useHubSessionsStore = defineStore('hubSessions', {
       this.filters.minActiveUsers = 1
       this.filters.includeEnded = false
       this.filters.includeEmptyHeadless = false
-      this.filters.includeIncompatible = false
     },
     async fetchSessions() {
       const userStore = useUserStore()
