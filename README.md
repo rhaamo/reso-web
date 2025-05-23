@@ -29,7 +29,6 @@ This is an Electron/VueJS app to chat and manage inventory and whatnot for reson
   - Showing in which world the contact is
   - Mark messages as read
 - Inventory
-  - Get Object resdb:/// links
   - Browse public dirs
   - Download asset
   - Upload asset
