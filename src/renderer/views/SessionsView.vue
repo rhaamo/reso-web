@@ -101,7 +101,11 @@
       <br />
     </template>
     Tags:
-    <BBadge variant="info" v-for="tag in sessionDetails.tags" :key="tag">{{ tag }}</BBadge>
+    <template v-for="tag in sessionDetails.tags" :key="tag">
+      <BBadge pill variant="info">{{ tag }}</BBadge
+      >&#8239;
+    </template>
+
     <br />
     Access level: {{ sessionDetails.accessLevel }}
     <br />
