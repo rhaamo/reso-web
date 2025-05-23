@@ -21,7 +21,6 @@ This is an Electron/VueJS app to chat and manage inventory and whatnot for reson
 - Sessions
   - [x] List with details
   - [ ] Pagination
-  - [ ] Generate go.resonite links ?
 - Inventory
   - [x] Basic listing
   - [ ] Get Object resdb:/// links
