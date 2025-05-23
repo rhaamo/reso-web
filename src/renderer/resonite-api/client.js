@@ -174,6 +174,24 @@ const getStorageQuota = (userId, token) => {
   })
 }
 
+const saveUserProfileValue = (userId, token, values) => {
+  // Known values fields:
+  // iconUrl (a resdb:/// link)
+  // tagline (string)
+  // description (string)
+  // displayBadges (list, probably the badges you can assign to yourself with the bot, like hearing issues etc.)
+
+  // /!\ BEWARE /!\
+  // You need to send EVERYTHING back because there is no PATCH support
+  // if you send only tagline, everything else will be removed
+  // you have to get the whole thing, update it, send it back :(
+  return Axios.put(`${API}/users/${userId}/profile`, values, {
+    headers: {
+      Authorization: `res ${userId}:${token}`
+    }
+  })
+}
+
 const resoniteApiClient = {
   API,
   MACHINEID,
@@ -192,7 +210,8 @@ const resoniteApiClient = {
   getUserRecord,
   getGroupRecordByPath,
   getGroupRecordsAt,
-  getStorageQuota
+  getStorageQuota,
+  saveUserProfileValue
 }
 
 export default resoniteApiClient
