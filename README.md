@@ -8,6 +8,8 @@ This is an Electron/VueJS app to chat and manage inventory and whatnot for reson
 <img src="./screenshot3.png" height="200px"/>
 </p>
 
+Note: the app is still a bit glitchy mostly due to the rate limiting, and probably the fact that we can't do real websockets (you can't set custom headers for websockets in the browser) :(
+
 ## Features
 
 - User profile
@@ -25,6 +27,9 @@ This is an Electron/VueJS app to chat and manage inventory and whatnot for reson
   - Listing of sessions with text formatting
   - Session details with users, 3D Sphere Viewer, master, etc.
   - `go.resonite.com` and `ressession:///` links
+- Worlds
+  - Listing of worlds and filtering
+  - Show detail of worlds with 3D Sphere Viewer, update times, etc.
 
 ## TODO / Unsupported
 
@@ -35,14 +40,14 @@ This is an Electron/VueJS app to chat and manage inventory and whatnot for reson
   - Sending `Audio` messages
   - Showing in which world the contact is
   - Mark messages as read
+  - Add contact
+  - Remove contact
+  - Cancel contact add
+  - Filter contacts by status
 - Inventory
   - Browse public dirs
   - Download asset
   - Upload asset
-- Worlds
-  - Basic listing
-  - Filtering
-  - Pagination
 - Global
   - Notifications (native & inapp)
 

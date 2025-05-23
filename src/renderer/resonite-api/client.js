@@ -200,6 +200,16 @@ const onlineStats = (userId, token) => {
   })
 }
 
+const searchWorldRecords = (userId, token, filters) => {
+  // filters format is a { dict } with below stuff for filtering
+  // requiredTags=[], sortDirection (ascending, descending), sortBy (creationDate, lastUpdateDate, firstPublishTime, totalVisits, name, rand (random)), count=10 (limit), offset=0, recordType="world"
+  return Axios.post(`${API}/records/pagedSearch`, JSON.stringify(filters), {
+    headers: {
+      Authorization: `res ${userId}:${token}`
+    }
+  })
+}
+
 const resoniteApiClient = {
   API,
   MACHINEID,
@@ -220,7 +230,8 @@ const resoniteApiClient = {
   getGroupRecordsAt,
   getStorageQuota,
   saveUserProfileValue,
-  onlineStats
+  onlineStats,
+  searchWorldRecords
 }
 
 export default resoniteApiClient
