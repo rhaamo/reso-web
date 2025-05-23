@@ -56,6 +56,7 @@ import logger from '@/renderer/logging'
 import { useUserStore } from '@/renderer/stores/user'
 import { useHubStore } from '@/renderer/stores/hub'
 import { useHubContactsStore } from '@/renderer/stores/hubContacts'
+import { useHubSessionsStore } from '@/renderer/stores/hubSessions'
 import { useToastController } from 'bootstrap-vue-next'
 import { mapState } from 'pinia'
 
@@ -64,6 +65,7 @@ export default {
     userStore: useUserStore(),
     hubStore: useHubStore(),
     hubContactsStore: useHubContactsStore(),
+    hubSessionsStore: useHubSessionsStore(),
     toasty: useToastController()
   }),
   data() {
@@ -113,19 +115,29 @@ export default {
       })
 
       // Init SignalR HUB Connection
-      this.hubStore.initHubConnection().then(() => {
-        // Fetch initial contact list
-        this.hubContactsStore.fetchInitialContacts().then(() => {
-          // Register handlers for status updates, broadcast status, etc.
-          this.hubContactsStore.registerHandlers().then(() => {
-            // Broadcast our initial status using last manually set status
-            this.hubContactsStore.broadcastStatus(this.userStore.lastStatus).then(() => {
-              // Request statues from contacts (doesn't work ?)
-              this.hubContactsStore.requestStatues()
+      this.hubStore
+        .initHubConnection()
+        // Then user handling
+        .then(() => {
+          // Fetch initial contact list
+          this.hubContactsStore.fetchInitialContacts().then(() => {
+            // Register handlers for status updates, broadcast status, etc.
+            this.hubContactsStore.registerHandlers().then(() => {
+              // Broadcast our initial status using last manually set status
+              this.hubContactsStore.broadcastStatus(this.userStore.lastStatus).then(() => {
+                // Request statues from contacts (doesn't work ?)
+                this.hubContactsStore.requestStatues()
+              })
             })
           })
         })
-      })
+        // And sessions handling
+        .then(() => {
+          this.hubSessionsStore.fetchSessions().then(() => {
+            // Register handlers
+            this.hubSessionsStore.registerHandlers()
+          })
+        })
     }
   },
   methods: {

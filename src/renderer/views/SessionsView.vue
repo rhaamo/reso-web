@@ -140,84 +140,54 @@
 import logger from '@/renderer/logging'
 import { useUserStore } from '@/renderer/stores/user'
 import { useHubStore } from '@/renderer/stores/hub'
+import { useHubSessionsStore } from '@/renderer/stores/hubSessions'
 import resoniteApiClient from '@/renderer/resonite-api/client'
 import { useModal } from 'bootstrap-vue-next'
 import { Viewer as PhotoSphereViewer } from '@photo-sphere-viewer/core'
 import { parseResoniteText } from '@/renderer/utils/resonite'
+import { mapState } from 'pinia'
 
 export default {
   setup: () => ({
     userStore: useUserStore(),
     hubStore: useHubStore(),
+    hubSessionsStore: useHubSessionsStore(),
     sessionInfosModal: useModal('#modal-session-infos')
   }),
   data: () => ({
-    sessions: [],
     showSessionInfosModal: false,
     sessionDetails: {},
-    photoSphereViewer: null,
-    sessionsFilters: {
-      name: '',
-      hostName: '',
-      minActiveUsers: 1,
-      includeEnded: false,
-      includeEmptyHeadless: false,
-      includeIncompatible: false
-    }
+    photoSphereViewer: null
   }),
+  computed: {
+    ...mapState(useHubSessionsStore, {
+      sessionsFilters(store) {
+        return store.filters
+      },
+      sessions(store) {
+        return store.sessions
+      }
+    })
+  },
   created() {
-    logger.default.info('Chats: check for login...')
-
     // Check if we are logged in, if not, redirect to login page
     if (!this.userStore.isLoggedIn) {
-      logger.default.info('not logged in, redirecting...')
+      logger.default.info('Logged in status: nope, redirecting to login page')
       this.$router.push({
         name: 'login'
       })
     } else {
-      logger.default.info('we are')
+      logger.default.info('Logged in status: we are good')
     }
-    this.fetchSessions()
   },
-  mounted() {
-    this.hubStore.initHubConnection().then(async () => {
-      this.hubStore.connection.on('ReceiveSessionUpdate', this.handleSessionUpdate)
-      // TODO: Add session and Remove session
-    })
-  },
-  beforeUnmount() {
-    this.hubStore.connection.off('ReceiveSessionUpdate', this.handleSessionUpdate)
-  },
+  mounted() {},
+  beforeUnmount() {},
   methods: {
     formatText(text) {
       return parseResoniteText(text)
     },
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    handleSessionUpdate(item) {
-      // spammy
-      //logger.default.info('Got session update: ', item)
-      // TODO FIXME pls
-    },
     formatDateYYYMMDD(date) {
       return new Date(date).toLocaleString()
-    },
-    fetchSessions() {
-      logger.default.info('Refreshing sessions...')
-      resoniteApiClient
-        .getSessions(this.userStore.userId, this.userStore.token, this.sessionsFilters)
-        .then((result) => {
-          logger.default.info('Fetched sessions', result)
-          this.sessions = result.data
-        })
-        .catch((error) => {
-          logger.default.error('Cannot fetch sessions', error)
-          // TODO error handling
-          this.sessions = []
-        })
-    },
-    filterSessions() {
-      logger.default.info('Reloading sessions with new filter')
-      this.fetchSessions()
     },
     resDbToAsset(resdb) {
       if (resdb) {
@@ -251,6 +221,10 @@ export default {
         this.sessionDetails.sessionUsers.find((el) => el.userID === userId)?.username ||
         'No user found'
       )
+    },
+    filterSessions() {
+      // When changing filters we need to refresh the sessions list
+      this.hubSessionsStore.fetchSessions()
     }
   }
 }

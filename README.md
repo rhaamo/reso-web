@@ -21,7 +21,6 @@ This is an Electron/VueJS app to chat and manage inventory and whatnot for reson
 - Sessions
   - [x] List with details
   - [ ] Pagination
-  - [ ] Realtime update of sessions (add/delete/update)
   - [ ] Generate go.resonite links ?
 - Inventory
   - [x] Basic listing
@@ -36,8 +35,6 @@ This is an Electron/VueJS app to chat and manage inventory and whatnot for reson
   - [ ] Pagination
 
 - TODO
-  - [ ] Move more stuff into store/hub
-  - [ ] Create a store/hubSessions to handle sessions standalone
   - [ ] Notifications (native & inapp)
   - [ ] Mark messages as read
 
