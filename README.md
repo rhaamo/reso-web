@@ -3,9 +3,9 @@
 This is an Electron/VueJS app to chat and manage inventory and whatnot for resonite.
 
 <p float="left">
-<img src="./screenshot1.png" height="300px"/>
-<img src="./screenshot2.png" height="300px"/>
+<img src="./screenshot4.png" height="300px"/>
 <img src="./screenshot3.png" height="200px"/>
+<img src="./screenshot1.png" height="300px"/>
 </p>
 
 Note: the app is still a bit glitchy mostly due to the rate limiting, and probably the fact that we can't do real websockets (you can't set custom headers for websockets in the browser) :(
