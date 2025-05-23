@@ -36,7 +36,7 @@
           </BCol>
         </BRow>
 
-        <div>
+        <div class="mb-3">
           <BCard title="Storage Quota">
             <BCardText>
               <BProgress
@@ -52,6 +52,16 @@
                 <div class="col text-end">{{ formatBytes(storage.fullQuotaBytes) }}</div>
               </div>
             </BCardText>
+          </BCard>
+        </div>
+
+        <div>
+          <BCard title="Stats">
+            Total of {{ stats.presentUsers }} users, with {{ stats.usersInVR }} in VR,
+            {{ stats.usersInScreen }} in PC and {{ stats.usersOnMobile }} on Mobile<br />
+            {{ stats.usersInVisiblePublicSessions }} in public sessions,
+            {{ stats.usersInPrivateSessions }} in private, {{ stats.usersInHiddenSessions }} in
+            hidden and {{ stats.usersInVisibleSemiAccessibleSessions }} in semi-accessible.<br />
           </BCard>
         </div>
       </div>
@@ -82,11 +92,14 @@ import { useUserStore } from '@/renderer/stores/user'
 import resoniteApiClient from '@/renderer/resonite-api/client'
 import { useHubContactsStore } from '@/renderer/stores/hubContacts'
 import { useToastController } from 'bootstrap-vue-next'
+import { useStatsStore } from '@/renderer/stores/stats'
+import { mapState } from 'pinia'
 
 export default {
   setup: () => ({
     userStore: useUserStore(),
     hubContactStore: useHubContactsStore(),
+    statsStore: useStatsStore(),
     toasty: useToastController()
   }),
   data: () => ({
@@ -101,6 +114,11 @@ export default {
     }
   }),
   computed: {
+    ...mapState(useStatsStore, {
+      stats(store) {
+        return store.stats
+      }
+    }),
     percentStorageUsed() {
       return (this.storage.usedBytes * 100) / this.storage.fullQuotaBytes
     },

@@ -192,6 +192,14 @@ const saveUserProfileValue = (userId, token, values) => {
   })
 }
 
+const onlineStats = (userId, token) => {
+  return Axios.get(`${API}/stats/onlineStats`, {
+    headers: {
+      Authorization: `res ${userId}:${token}`
+    }
+  })
+}
+
 const resoniteApiClient = {
   API,
   MACHINEID,
@@ -211,7 +219,8 @@ const resoniteApiClient = {
   getGroupRecordByPath,
   getGroupRecordsAt,
   getStorageQuota,
-  saveUserProfileValue
+  saveUserProfileValue,
+  onlineStats
 }
 
 export default resoniteApiClient

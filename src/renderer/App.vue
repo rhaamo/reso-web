@@ -57,6 +57,7 @@ import { useUserStore } from '@/renderer/stores/user'
 import { useHubStore } from '@/renderer/stores/hub'
 import { useHubContactsStore } from '@/renderer/stores/hubContacts'
 import { useHubSessionsStore } from '@/renderer/stores/hubSessions'
+import { useStatsStore } from '@/renderer/stores/stats'
 import { useToastController } from 'bootstrap-vue-next'
 import { mapState } from 'pinia'
 
@@ -64,6 +65,7 @@ export default {
   setup: () => ({
     userStore: useUserStore(),
     hubStore: useHubStore(),
+    statsStore: useStatsStore(),
     hubContactsStore: useHubContactsStore(),
     hubSessionsStore: useHubSessionsStore(),
     toasty: useToastController()
@@ -136,6 +138,12 @@ export default {
           this.hubSessionsStore.fetchSessions().then(() => {
             // Register handlers
             this.hubSessionsStore.registerHandlers()
+          })
+        })
+        // And stats gathering
+        .then(() => {
+          this.statsStore.getStats().then(() => {
+            this.statsStore.registerHandlers()
           })
         })
     }
