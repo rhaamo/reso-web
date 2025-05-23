@@ -33,6 +33,7 @@ export const useHubStore = defineStore('hub', {
             // skipNegotiation: true,
             // No websocket for us sadly
             transport: HttpTransportType.LongPolling,
+            // transport: HttpTransportType.ServerSentEvents, // apparently no custom headers for you too
             headers: {
               Authorization: userStore.fullToken,
               // Are thoses two really required ? ReCon doesn't seems to have them
