@@ -61,18 +61,19 @@
     <hr />
 
     <BCardGroup columns>
-      <a
-        :href="`#${session.sessionId}`"
-        v-for="session in sessions"
-        :key="session.sessionId"
-        @click.prevent="showModal(session)"
-      >
-        <BCard style="max-width: 20rem" :img-src="session.thumbnailUrl" img-top>
-          <BCardImg></BCardImg>
-          <BCardTitle v-html="formatText(session.name)"></BCardTitle>
-          <BCardText> {{ session.totalActiveUsers }}/{{ session.maxUsers }} Online </BCardText>
-        </BCard>
-      </a>
+      <div v-for="session in sessions" :key="session.sessionId" class="card" style="width: 18rem">
+        <a :href="`#${session.sessionId}`" @click.prevent="showModal(session)">
+          <img :src="session.thumbnailUrl" class="card-img-top" alt="session thumbnail" />
+        </a>
+        <div class="card-body">
+          <h5 class="card-title">
+            <a :href="getGoDotResoniteLink(session)" target="_blank"
+              ><BButton size="sm"><i class="ri-external-link-line"></i></BButton></a
+            >&nbsp;<span v-html="formatText(session.name)"></span>
+          </h5>
+          <p class="card-text">{{ session.totalActiveUsers }}/{{ session.maxUsers }} Online</p>
+        </div>
+      </div>
     </BCardGroup>
   </BContainer>
 
@@ -89,7 +90,14 @@
       id="sphere-world-preview"
       ref="sphere-world-preview"
       style="width: 48rem; height: 30rem"
+      class="mb-3"
     ></div>
+    <a :href="getGoDotResoniteLink(sessionDetails)" target="_blank">
+      <BButton size="sm">Open go.resonite.com</BButton> </a
+    >&nbsp;
+    <a :href="getRessessionLink(sessionDetails)" target="_blank">
+      <BButton size="sm">Open in resonite</BButton>
+    </a>
     <hr />
     <template v-if="sessionDetails.description">
       <span v-html="formatText(sessionDetails.description)"></span>
@@ -230,6 +238,12 @@ export default {
     filterSessions() {
       // When changing filters we need to refresh the sessions list
       this.hubSessionsStore.fetchSessions()
+    },
+    getGoDotResoniteLink(session) {
+      return `https://go.resonite.com/session/${session.sessionId}`
+    },
+    getRessessionLink(session) {
+      return `ressession:///${session.sessionId}`
     }
   }
 }
