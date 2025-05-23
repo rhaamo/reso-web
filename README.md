@@ -11,31 +11,34 @@ This is an Electron/VueJS app to chat and manage inventory and whatnot for reson
 ## Features
 
 - Chats
-  - [x] List users with status
-  - [x] Send messages
-  - [x] Receive them
-  - [x] Realtime updates
-  - [ ] Handle non-Text messages
-  - [?] Change own status (To be tested)
-  - [ ] Show in which session the user is active
-- Sessions
-  - [x] List with details
-  - [ ] Pagination
+  - Can send and receive messages, with realtime updates.
+  - Can also listen to audio message and view Session invites and Request.
+  - Can broadcast your own status (not tested if that really works yet tho :p)
 - Inventory
-  - [x] Basic listing
-  - [ ] Get Object resdb:/// links
-  - [ ] Browse public dirs
-  - [ ] Download asset
-  - [ ] Upload asset
+  - Basic browsing, and getting `resdb:///` link of objects.
+- Sessions
+  - Listing of sessions with text formatting
+  - Session details with users, 3D Sphere Viewer, master, etc.
+  - `go.resonite.com` and `ressession:///` links
+
+## TODO / Unsupported
+
+- Chats
+  - Handle `Object` messages
+  - Sending `Audio` messages
+  - Showing in which world the contact is
+  - Mark messages as read
+- Inventory
+  - Get Object resdb:/// links
+  - Browse public dirs
+  - Download asset
+  - Upload asset
 - Worlds
-
-  - [ ] Basic listing
-  - [ ] Filtering
-  - [ ] Pagination
-
-- TODO
-  - [ ] Notifications (native & inapp)
-  - [ ] Mark messages as read
+  - Basic listing
+  - Filtering
+  - Pagination
+- Global
+  - Notifications (native & inapp)
 
 ## Build or something
 

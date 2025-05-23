@@ -61,7 +61,12 @@
     <hr />
 
     <BCardGroup columns>
-      <div v-for="session in sessions" :key="session.sessionId" class="card" style="width: 18rem">
+      <div
+        v-for="session in currentPageSessions"
+        :key="session.sessionId"
+        class="card"
+        style="width: 18rem"
+      >
         <a :href="`#${session.sessionId}`" @click.prevent="showModal(session)">
           <img
             title="Show session details"
@@ -85,10 +90,11 @@
     </BCardGroup>
     <hr />
     <b-pagination
-      v-model="pagination.currentPage"
-      :total-rows="pagination.totalRows"
-      :per-page="pagination.perPage"
-      aria-controls="my-table"
+      v-model="currentPage"
+      :total-rows="totalRows"
+      :per-page="perPage"
+      align="center"
+      pills
     />
   </BContainer>
 
@@ -188,11 +194,8 @@ export default {
     showSessionInfosModal: false,
     sessionDetails: {},
     photoSphereViewer: null,
-    pagination: {
-      currentPage: 0,
-      totalRows: 0,
-      perPage: 4
-    }
+    perPage: 12,
+    currentPage: 1
   }),
   computed: {
     ...mapState(useHubSessionsStore, {
@@ -202,7 +205,16 @@ export default {
       sessions(store) {
         return store.sessions
       }
-    })
+    }),
+    currentPageSessions() {
+      return this.sessions.slice(
+        (this.currentPage - 1) * this.perPage,
+        this.currentPage * this.perPage
+      )
+    },
+    totalRows() {
+      return this.sessions.length
+    }
   },
   created() {
     // Check if we are logged in, if not, redirect to login page
