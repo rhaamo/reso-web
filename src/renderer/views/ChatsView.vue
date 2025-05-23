@@ -58,7 +58,7 @@
             </template>
             <BCardText class="allMsgs">
               <div ref="messagesContainer" id="messagesContainer">
-                <div v-for="msg in selectedContactMessages" :key="msg.id">
+                <div v-for="msg in selectedContactMessages" :key="msg.id" class="mb-2">
                   <BRow v-if="msg.recipientId == selectedContact.id">
                     <BCol cols="6"></BCol>
                     <BCol cols="6">
