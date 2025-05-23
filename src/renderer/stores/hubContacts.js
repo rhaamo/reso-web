@@ -3,6 +3,7 @@ import logger from '@/renderer/logging'
 import { useHubStore } from '@/renderer/stores/hub'
 import { useUserStore } from '@/renderer/stores/user'
 import resoniteApiClient from '@/renderer/resonite-api/client'
+import { appVersion } from '@/renderer/version'
 
 export const useHubContactsStore = defineStore('hubContacts', {
   persist: false,
@@ -105,7 +106,7 @@ export const useHubContactsStore = defineStore('hubContacts', {
           lastPresenceTimestamp: curDate,
           lastStatusChange: curDate,
           // hashSalt: '???', // Probably linked to the RSA key ?
-          appVersion: '1.0.0 beta of reso-web',
+          appVersion: appVersion(),
           compatibilityHash: resoniteApiClient.COMPAT,
           // See hubSendTextMessage in store/hub.js for more infos about that RSA key
           // publicRSAKey: {

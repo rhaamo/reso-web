@@ -40,8 +40,14 @@
                       <i class="ri-question-mark"></i> Request sent
                     </p>
                     <p class="mb-1" v-if="contact.isAccepted">
-                      <i :class="`ri-circle-fill text-${statusColor(contact.onlineStatus)}`"></i>
-                      {{ contact.onlineStatus || 'Offline' }}
+                      <template v-if="!itsMe(contact.id)">
+                        <i :class="`ri-circle-fill text-${statusColor(contact.onlineStatus)}`"></i>
+                        {{ contact.onlineStatus || 'Offline' }}
+                      </template>
+                      <template v-else>
+                        <i :class="`ri-circle-fill text-${statusColor(ourStatus)}`"></i>
+                        {{ ourStatus }} on {{ appVersion() }}
+                      </template>
                     </p>
                   </div>
                 </BCol></BRow
@@ -134,6 +140,7 @@ import resoniteApiClient from '@/renderer/resonite-api/client'
 import { mapState } from 'pinia'
 import { useToastController } from 'bootstrap-vue-next'
 import ChatMessage from '@/renderer/components/ChatMessage'
+import { appVersion as theAppVersion } from '@/renderer/version'
 
 // TODO: contacts filtering by status, if I manage to get status :')
 
@@ -161,6 +168,9 @@ export default {
           return []
         }
         return store.contactsMessages[this.selectedContact.id]
+      },
+      ourStatus(store) {
+        return store.ourStatus
       }
     })
   },
@@ -199,6 +209,12 @@ export default {
       this.$nextTick(() => {
         this.$refs.bottomOfMessages.scrollIntoView({ behavior: 'smooth' })
       })
+    },
+    itsMe(userId) {
+      return this.userStore.userId === userId
+    },
+    appVersion() {
+      return theAppVersion()
     },
     sendMessage() {
       logger.default.info(
