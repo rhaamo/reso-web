@@ -10,6 +10,11 @@ This is an Electron/VueJS app to chat and manage inventory and whatnot for reson
 
 ## Features
 
+- User profile
+  - Shows (and can edit) your tagline and description
+  - Shows your profile picture and UserID
+  - Shows your inventory usage (used, total, percent)
+  - Shows various game stats (users in VR, desktop, session types)
 - Chats
   - Can send and receive messages, with realtime updates.
   - Can also listen to audio message and view Session invites and Request.
@@ -23,6 +28,8 @@ This is an Electron/VueJS app to chat and manage inventory and whatnot for reson
 
 ## TODO / Unsupported
 
+- User profile
+  - Set profile picture
 - Chats
   - Handle `Object` messages
   - Sending `Audio` messages
