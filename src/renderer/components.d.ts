@@ -39,6 +39,7 @@ declare module 'vue' {
     BNavbarToggle: typeof import('bootstrap-vue-next/components/BNavbar')['BNavbarToggle']
     BNavItem: typeof import('bootstrap-vue-next/components/BNav')['BNavItem']
     BNavItemDropdown: typeof import('bootstrap-vue-next/components/BNav')['BNavItemDropdown']
+    BPagination: typeof import('bootstrap-vue-next/components/BPagination')['BPagination']
     BProgress: typeof import('bootstrap-vue-next/components/BProgress')['BProgress']
     BRow: typeof import('bootstrap-vue-next/components/BContainer')['BRow']
     BToastOrchestrator: typeof import('bootstrap-vue-next/components/BToast')['BToastOrchestrator']
@@ -60,5 +61,6 @@ declare module 'vue' {
   export interface ComponentCustomProperties {
     vBColorMode: typeof import('bootstrap-vue-next/directives/BColorMode')['vBColorMode']
     vBToggle: typeof import('bootstrap-vue-next/directives/BToggle')['vBToggle']
+    vBTooltip: typeof import('bootstrap-vue-next/directives/BTooltip')['vBTooltip']
   }
 }

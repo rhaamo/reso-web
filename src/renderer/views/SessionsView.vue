@@ -63,11 +63,19 @@
     <BCardGroup columns>
       <div v-for="session in sessions" :key="session.sessionId" class="card" style="width: 18rem">
         <a :href="`#${session.sessionId}`" @click.prevent="showModal(session)">
-          <img :src="session.thumbnailUrl" class="card-img-top" alt="session thumbnail" />
+          <img
+            title="Show session details"
+            :src="session.thumbnailUrl"
+            class="card-img-top"
+            alt="session thumbnail"
+          />
         </a>
         <div class="card-body">
           <h5 class="card-title">
-            <a :href="getGoDotResoniteLink(session)" target="_blank"
+            <a
+              :href="getGoDotResoniteLink(session)"
+              title="Open go.resonite.com link"
+              target="_blank"
               ><BButton size="sm"><i class="ri-external-link-line"></i></BButton></a
             >&nbsp;<span v-html="formatText(session.name)"></span>
           </h5>
@@ -75,6 +83,13 @@
         </div>
       </div>
     </BCardGroup>
+    <hr />
+    <b-pagination
+      v-model="pagination.currentPage"
+      :total-rows="pagination.totalRows"
+      :per-page="pagination.perPage"
+      aria-controls="my-table"
+    />
   </BContainer>
 
   <BModal
@@ -93,10 +108,12 @@
       class="mb-3"
     ></div>
     <a :href="getGoDotResoniteLink(sessionDetails)" target="_blank">
-      <BButton size="sm">Open go.resonite.com</BButton> </a
+      <BButton size="sm" :title="getGoDotResoniteLink(sessionDetails)"
+        >Open go.resonite.com</BButton
+      > </a
     >&nbsp;
     <a :href="getRessessionLink(sessionDetails)" target="_blank">
-      <BButton size="sm">Open in resonite</BButton>
+      <BButton size="sm" :title="getRessessionLink(sessionDetails)">Open in resonite</BButton>
     </a>
     <hr />
     <template v-if="sessionDetails.description">
@@ -170,7 +187,12 @@ export default {
   data: () => ({
     showSessionInfosModal: false,
     sessionDetails: {},
-    photoSphereViewer: null
+    photoSphereViewer: null,
+    pagination: {
+      currentPage: 0,
+      totalRows: 0,
+      perPage: 4
+    }
   }),
   computed: {
     ...mapState(useHubSessionsStore, {
